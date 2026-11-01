@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ChevronLeft,
   ChevronRight,
+  Database,
   Maximize2,
   Minimize2,
   RefreshCw,
@@ -21,6 +22,7 @@ import { RelationshipScene } from "./scenes/RelationshipScene";
 import { OutlierScene } from "./scenes/OutlierScene";
 import { IndependenceScene } from "./scenes/IndependenceScene";
 import { ClosingScene } from "./scenes/ClosingScene";
+import { DataPanel } from "./DataPanel";
 import type { SceneProps } from "./SceneFrame";
 import "./deck.css";
 
@@ -61,6 +63,7 @@ export function Presentation() {
   const sceneCount = SCENE_NOTES.length;
   const { index, direction, goTo, next, prev } = useDeck(sceneCount);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [dataOpen, setDataOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const currentNote = SCENE_NOTES[index];
@@ -87,7 +90,10 @@ export function Presentation() {
       const interactive = target?.closest("input, select, textarea, button, a, [contenteditable]");
 
       if (event.key === "Escape") {
-        if (notesOpen) {
+        if (dataOpen) {
+          setDataOpen(false);
+          event.preventDefault();
+        } else if (notesOpen) {
           setNotesOpen(false);
           event.preventDefault();
         }
@@ -95,6 +101,8 @@ export function Presentation() {
       }
 
       if (interactive) return;
+
+      if ((notesOpen || dataOpen) && !["n", "N", "d", "D"].includes(event.key)) return;
 
       switch (event.key) {
         case "ArrowRight":
@@ -119,7 +127,14 @@ export function Presentation() {
         case "n":
         case "N":
           event.preventDefault();
+          setDataOpen(false);
           setNotesOpen((open) => !open);
+          break;
+        case "d":
+        case "D":
+          event.preventDefault();
+          setNotesOpen(false);
+          setDataOpen((open) => !open);
           break;
         case "f":
         case "F":
@@ -138,7 +153,7 @@ export function Presentation() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [goTo, next, notesOpen, prev, regenerate, sceneCount, toggleFullscreen]);
+  }, [dataOpen, goTo, next, notesOpen, prev, regenerate, sceneCount, toggleFullscreen]);
 
   const variants = reduced
     ? {
@@ -213,11 +228,28 @@ export function Presentation() {
           <button
             type="button"
             className="deck-icon-button"
+            data-active={dataOpen}
+            title="Datos de la muestra (D)"
+            aria-label="Mostrar panel de datos"
+            aria-expanded={dataOpen}
+            onClick={() => {
+              setNotesOpen(false);
+              setDataOpen((open) => !open);
+            }}
+          >
+            <Database aria-hidden="true" size={16} />
+          </button>
+          <button
+            type="button"
+            className="deck-icon-button"
             data-active={notesOpen}
             title="Notas del presentador (N)"
             aria-label="Mostrar notas del presentador"
             aria-expanded={notesOpen}
-            onClick={() => setNotesOpen((open) => !open)}
+            onClick={() => {
+              setDataOpen(false);
+              setNotesOpen((open) => !open);
+            }}
           >
             <StickyNote aria-hidden="true" size={16} />
           </button>
@@ -250,7 +282,14 @@ export function Presentation() {
             className="flex min-h-0 flex-1"
           >
             {ActiveScene ? (
-              <ActiveScene onNext={next} onRestart={() => goTo(0)} />
+              <ActiveScene
+                onNext={next}
+                onRestart={() => goTo(0)}
+                onOpenData={() => {
+                  setNotesOpen(false);
+                  setDataOpen(true);
+                }}
+              />
             ) : (
               <PlaceholderScene index={index} />
             )}
@@ -284,7 +323,7 @@ export function Presentation() {
         </div>
 
         <p className="deck-swipe-hint ml-auto hidden sm:block">
-          Flechas para navegar · N notas · F pantalla completa
+          Flechas para navegar · D datos · N notas · F pantalla completa
         </p>
         <p className="ml-auto text-[0.65rem] tabular-nums text-faint sm:hidden">
           Semilla {sample.seed}
@@ -331,6 +370,10 @@ export function Presentation() {
             </p>
           </motion.aside>
         ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {dataOpen ? <DataPanel onClose={() => setDataOpen(false)} /> : null}
       </AnimatePresence>
     </div>
   );

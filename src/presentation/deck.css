@@ -312,6 +312,28 @@
   line-height: 1.55;
 }
 
+.deck-backdrop {
+  position: absolute;
+  inset: 4.25rem 0 4rem;
+  z-index: 35;
+  background: rgba(0, 0, 0, 0.46);
+  backdrop-filter: blur(3px);
+}
+
+.deck-data {
+  position: absolute;
+  top: 4.25rem;
+  right: 0;
+  bottom: 4rem;
+  z-index: 40;
+  width: min(38rem, 100vw);
+  border-left: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 97%, transparent);
+  padding: 1.25rem;
+  overflow-y: auto;
+  box-shadow: -24px 0 80px rgba(0, 0, 0, 0.28);
+}
+
 .deck-swipe-hint {
   color: var(--faint);
   font-size: 0.66rem;
@@ -426,6 +448,15 @@
   }
 
   .deck-notes {
+    top: 3.8rem;
+    bottom: 3.8rem;
+  }
+
+  .deck-backdrop {
+    inset: 3.8rem 0 3.8rem;
+  }
+
+  .deck-data {
     top: 3.8rem;
     bottom: 3.8rem;
   }
