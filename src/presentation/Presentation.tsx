@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ChevronLeft,
@@ -13,7 +13,21 @@ import {
 import { useSample } from "../state/SampleContext";
 import { SCENE_NOTES } from "./notes";
 import { useDeck } from "./useDeck";
+import { TitleScene } from "./scenes/TitleScene";
+import { GuessScene } from "./scenes/GuessScene";
+import type { SceneProps } from "./SceneFrame";
 import "./deck.css";
+
+const SCENES: Array<ComponentType<SceneProps> | null> = [
+  TitleScene,
+  GuessScene,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+];
 
 function PlaceholderScene({ index }: { index: number }) {
   const { sample } = useSample();
@@ -44,6 +58,7 @@ export function Presentation() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const currentNote = SCENE_NOTES[index];
+  const ActiveScene = SCENES[index];
 
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) {
@@ -228,7 +243,11 @@ export function Presentation() {
             transition={{ duration: reduced ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
             className="flex min-h-0 flex-1"
           >
-            <PlaceholderScene index={index} />
+            {ActiveScene ? (
+              <ActiveScene onNext={next} />
+            ) : (
+              <PlaceholderScene index={index} />
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
