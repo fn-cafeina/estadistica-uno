@@ -29,7 +29,7 @@ export function RelationshipScene(_: SceneProps) {
       insight="La recta resume la tendencia de esta muestra. Mové las horas de estudio y mirá qué promedio estima el modelo."
     >
       <div className="grid flex-1 items-center gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="deck-panel h-[clamp(16rem,44vh,32rem)] p-3 sm:p-4">
+        <div className="deck-panel h-[clamp(14rem,38vh,28rem)] p-3 sm:p-4">
           <div className="aspect-[12/7] h-full w-full">
             <ScatterPlot
               points={points}

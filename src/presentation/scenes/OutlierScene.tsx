@@ -94,7 +94,7 @@ export function OutlierScene(_: SceneProps) {
       insight="Arrastrá el punto ámbar. La recta y la correlación se recalculan en vivo. La relación no es una propiedad fija de los datos."
     >
       <div className="grid flex-1 items-center gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="deck-panel h-[clamp(16rem,44vh,32rem)] p-3 sm:p-4">
+        <div className="deck-panel h-[clamp(14rem,38vh,28rem)] p-3 sm:p-4">
           <div className="aspect-[12/7] h-full w-full">
             <ScatterPlot
               points={editedPoints}

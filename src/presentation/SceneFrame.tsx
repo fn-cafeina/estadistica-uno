@@ -34,7 +34,7 @@ export function SceneFrame({
         <h2 className={cn("deck-title", titleClassName)}>{title}</h2>
         {insight ? <p className="deck-insight">{insight}</p> : null}
       </header>
-      <div className="mt-6 flex min-h-0 flex-1 flex-col">{children}</div>
+      <div className="mt-5 flex min-h-0 flex-1 flex-col">{children}</div>
       {footer ? <div className="mt-4 shrink-0">{footer}</div> : null}
     </div>
   );

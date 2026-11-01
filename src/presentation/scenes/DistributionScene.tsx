@@ -91,7 +91,7 @@ export function DistributionScene(_: SceneProps) {
             </div>
           </div>
 
-          <div className="deck-panel flex h-[clamp(15rem,36vh,24rem)] flex-col p-4 sm:p-5">
+          <div className="deck-panel flex h-[clamp(13rem,32vh,22rem)] flex-col p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
               <p className="deck-label">{variable.label}</p>
               <span className="text-[0.66rem] text-faint">Ocho intervalos</span>
