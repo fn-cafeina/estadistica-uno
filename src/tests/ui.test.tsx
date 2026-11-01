@@ -49,58 +49,63 @@ mock.module("motion/react", () => ({
   useReducedMotion: () => true,
 }));
 
-mock.module("../components/charts/charts", () => ({
-  BarFrequencyChart: () => null,
-  HistogramChart: () => null,
-  DoughnutChart: () => null,
-  ScatterRegressionChart: () => null,
-  ComparisonChart: () => null,
-}));
-
 const { cleanup, fireEvent, render, screen, waitFor } = await import("@testing-library/react");
 const { App } = await import("../App");
 
 afterEach(() => cleanup());
 afterAll(() => GlobalRegistrator.unregister());
 
-test("monta la aplicación y muestra la muestra inicial", async () => {
+test("abre en la portada de la presentación", async () => {
   render(createElement(App));
 
   expect(
-    screen.getAllByRole("heading", {
-      name: /tecnología y rendimiento académico universitario/i,
-    }).length,
-  ).toBeGreaterThan(0);
-  expect(screen.getByRole("heading", { name: /base de datos interactiva/i })).toBeTruthy();
-  expect(screen.getByRole("heading", { name: /cuestionario y variables/i })).toBeTruthy();
-  expect(screen.getAllByText(/datos sintéticos/i).length).toBeGreaterThan(0);
+    screen.getByRole("heading", { name: /tecnología y rendimiento académico/i }),
+  ).toBeTruthy();
+  expect(screen.getAllByText(/80 estudiantes que no existen/i).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/01 \/ 08/i).length).toBeGreaterThan(0);
 });
 
-test("genera una nueva muestra y muestra el aviso", async () => {
+test("avanza con el botón y con la flecha derecha", async () => {
   render(createElement(App));
-  const buttons = screen.getAllByRole("button", { name: /nueva muestra/i });
-  const headerButton = buttons[0];
-  expect(headerButton).toBeTruthy();
-  if (headerButton) fireEvent.click(headerButton);
-  expect(await screen.findByText(/nueva muestra generada/i)).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
+  expect(
+    await screen.findByRole("heading", { name: /antes de mirar los datos, apostá/i }),
+  ).toBeTruthy();
+
+  fireEvent.keyDown(document.body, { key: "ArrowRight" });
+  expect(
+    await screen.findByRole("heading", { name: /80 estudiantes que no existen/i }),
+  ).toBeTruthy();
 });
 
-test("cambia el tema y lo aplica al documento", async () => {
+test("abre y cierra el panel de datos", async () => {
   render(createElement(App));
-  fireEvent.click(screen.getByRole("button", { name: /tema actual/i }));
-  const option = await screen.findByRole("menuitemradio", { name: /rosé pine moon/i });
-  fireEvent.click(option);
+
+  fireEvent.click(screen.getByRole("button", { name: /mostrar panel de datos/i }));
+  expect(await screen.findByRole("dialog", { name: /panel de datos/i })).toBeTruthy();
+  expect(screen.getByRole("heading", { name: /^la muestra$/i })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: /cerrar panel de datos/i }));
   await waitFor(() => {
-    expect(document.documentElement.dataset.theme).toBe("rose-pine");
+    expect(screen.queryByRole("dialog", { name: /panel de datos/i })).toBeNull();
   });
 });
 
-test("aplica un filtro global y actualiza el contador", async () => {
+test("muestra y oculta las notas del presentador", async () => {
   render(createElement(App));
-  const career = screen.getByLabelText("Carrera");
-  fireEvent.change(career, { target: { value: "Medicina" } });
+
+  fireEvent.click(screen.getByRole("button", { name: /mostrar notas del presentador/i }));
+  expect(await screen.findByText(/no expliques nada todavía/i)).toBeTruthy();
+
+  fireEvent.keyDown(document.body, { key: "Escape" });
   await waitFor(() => {
-    const badges = screen.getAllByText(/de 80 registros/i);
-    expect(badges.length).toBeGreaterThan(0);
+    expect(screen.queryByText(/no expliques nada todavía/i)).toBeNull();
   });
+});
+
+test("regenera la muestra desde la barra superior", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /generar nueva muestra/i }));
+  expect(await screen.findByText(/semilla/i)).toBeTruthy();
 });
