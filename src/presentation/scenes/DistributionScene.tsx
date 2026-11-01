@@ -5,6 +5,7 @@ import { describe } from "../../stats/descriptive";
 import { groupedFrequency } from "../../stats/frequency";
 import { formatNumber } from "../../lib/format";
 import { Histogram } from "../visuals/Histogram";
+import { AnimatedNumber } from "../visuals/AnimatedNumber";
 import { cn, SceneFrame, type SceneProps } from "../SceneFrame";
 
 const VARIABLES: Array<{ key: QuantitativeKey; short: string; label: string; unit: string }> = [
@@ -40,7 +41,7 @@ export function DistributionScene(_: SceneProps) {
   return (
     <SceneFrame
       kicker="04 / LA FORMA"
-      title="No todos usan la tecnología igual."
+      title={<>No todos usan la tecnología <em>igual</em>.</>}
       insight="Cambiá la variable y mirá cómo se mueve la forma. La media y la mediana cuentan historias distintas."
     >
       <div className="flex flex-1 flex-col">
@@ -51,10 +52,10 @@ export function DistributionScene(_: SceneProps) {
               type="button"
               onClick={() => setSelected(item.key)}
               className={cn(
-                "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors sm:text-sm",
+                "rounded-[1px] border px-3 py-1.5 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] transition-colors",
                 selected === item.key
                   ? "border-accent bg-accent text-bg"
-                  : "border-border bg-surface/60 text-muted hover:border-border-strong hover:text-fg",
+                  : "border-border bg-transparent text-muted hover:border-border-strong hover:text-fg",
               )}
             >
               {item.short}
@@ -62,11 +63,11 @@ export function DistributionScene(_: SceneProps) {
           ))}
         </div>
 
-        <div className="grid flex-1 items-center gap-8 lg:grid-cols-[0.68fr_1.32fr]">
+        <div className="grid flex-1 items-center gap-8 xl:grid-cols-[0.68fr_1.32fr]">
           <div>
             <p className="deck-label">Media</p>
             <p className="deck-stat mt-2 text-accent">
-              {formatNumber(summary.mean, 1)}
+              <AnimatedNumber value={summary.mean} digits={1} />
               <span className="ml-2 font-sans text-sm font-medium tracking-normal text-muted">
                 {variable.unit}
               </span>
@@ -78,23 +79,29 @@ export function DistributionScene(_: SceneProps) {
             <div className="mt-6 grid max-w-sm grid-cols-3 gap-3 border-t border-border pt-4">
               <div>
                 <p className="deck-label">Mediana</p>
-                <p className="mt-1 text-xl tabular-nums text-fg">{formatNumber(summary.median, 1)}</p>
+                <p className="mt-1 text-xl tabular-nums text-fg">
+                  <AnimatedNumber value={summary.median} digits={1} />
+                </p>
               </div>
               <div>
                 <p className="deck-label">Desv. est.</p>
-                <p className="mt-1 text-xl tabular-nums text-fg">{formatNumber(summary.stdDev, 2)}</p>
+                <p className="mt-1 text-xl tabular-nums text-fg">
+                  <AnimatedNumber value={summary.stdDev} digits={2} />
+                </p>
               </div>
               <div>
                 <p className="deck-label">Rango</p>
-                <p className="mt-1 text-xl tabular-nums text-fg">{formatNumber(summary.range, 1)}</p>
+                <p className="mt-1 text-xl tabular-nums text-fg">
+                  <AnimatedNumber value={summary.range} digits={1} />
+                </p>
               </div>
             </div>
           </div>
 
           <div className="deck-panel flex h-[clamp(13rem,32vh,22rem)] flex-col p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <p className="deck-label">{variable.label}</p>
-              <span className="text-[0.66rem] text-faint">Ocho intervalos</span>
+              <p className="deck-fig">Fig. 3 · {variable.label}</p>
+              <span className="font-mono text-[0.58rem] text-faint">Ocho intervalos</span>
             </div>
             <div className="min-h-0 flex-1">
               <Histogram

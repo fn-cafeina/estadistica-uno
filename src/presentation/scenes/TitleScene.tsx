@@ -11,7 +11,7 @@ export function TitleScene({ onNext }: SceneProps) {
 
   return (
     <div className="deck-scene">
-      <div className="grid h-full min-h-0 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+      <div className="grid h-full min-h-0 items-center gap-8 xl:grid-cols-[1.05fr_0.95fr] xl:gap-12">
         <motion.div
           initial={reduced ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -23,22 +23,41 @@ export function TitleScene({ onNext }: SceneProps) {
             UNAN-León · Estadística Introductoria · 2026
           </p>
 
-          <h1 className="mt-5 max-w-[12ch] font-display text-[clamp(3.7rem,9vw,9.4rem)] leading-[0.82] tracking-[-0.05em] text-fg">
-            Tecnología y <span className="text-accent">rendimiento</span> académico
+          <h1 className="mt-5 max-w-[12ch] font-display text-[clamp(3.35rem,8.1vw,8.6rem)] leading-[0.85] tracking-[-0.04em] text-fg">
+            {["Tecnología", "y rendimiento", "académico."].map((line, index) => (
+              <span key={line} className="block overflow-hidden pb-[0.06em]">
+                <motion.span
+                  initial={reduced ? false : { y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{
+                    duration: reduced ? 0 : 0.72,
+                    delay: reduced ? 0 : 0.08 + index * 0.09,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className={
+                    index === 1
+                      ? "deck-title-underline inline-block italic text-accent"
+                      : "inline-block"
+                  }
+                >
+                  {line}
+                </motion.span>
+              </span>
+            ))}
           </h1>
 
-          <p className="mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
             {sample.n} estudiantes que no existen. Una pregunta real.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-7 flex flex-wrap items-center gap-4">
             <button type="button" className="deck-control deck-control-primary" onClick={onNext}>
               Empezar
               <ArrowRight aria-hidden="true" size={16} />
             </button>
-            <span className="deck-swipe-hint flex items-center gap-2">
+            <span className="deck-hint flex items-center gap-2">
               <MousePointer2 aria-hidden="true" size={13} />
-              Flecha derecha para avanzar
+              Flechas izquierda y derecha para navegar
             </span>
           </div>
         </motion.div>
@@ -47,7 +66,7 @@ export function TitleScene({ onNext }: SceneProps) {
           initial={reduced ? false : { opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: reduced ? 0 : 0.9, delay: reduced ? 0 : 0.15 }}
-          className="relative hidden h-[62vh] min-h-[20rem] items-center justify-center lg:flex"
+          className="relative hidden h-[62vh] min-h-[20rem] items-center justify-center xl:flex"
         >
           <div className="absolute inset-x-8 top-1/2 h-px bg-border" />
           <PointCloud points={points} className="h-full w-full" />

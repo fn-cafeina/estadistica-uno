@@ -3,8 +3,9 @@ import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useSample } from "../../state/SampleContext";
 import { getCategories, getCategoricalValue } from "../../data/schema";
 import { chiSquareTest } from "../../stats/chiSquare";
-import { formatNumber, formatPValue, pDecisionText } from "../../lib/format";
+import { formatPValue, pDecisionText } from "../../lib/format";
 import { ContingencyGrid } from "../visuals/ContingencyGrid";
+import { AnimatedNumber } from "../visuals/AnimatedNumber";
 import { cn, SceneFrame, type SceneProps } from "../SceneFrame";
 
 const ALPHA = 0.05;
@@ -39,16 +40,16 @@ export function IndependenceScene(_: SceneProps) {
   return (
     <SceneFrame
       kicker="07 / LA PRUEBA"
-      title="¿Uso y rendimiento van juntos?"
+      title={<>¿Uso y rendimiento <em>van juntos</em>?</>}
       insight="La tabla muestra lo observado. El botón cambia a lo que veríamos si no hubiera relación."
       footer={
         <div className="flex flex-wrap items-center gap-3">
-          <div className="inline-flex rounded-lg border border-border bg-surface/60 p-1">
+          <div className="inline-flex border border-border-strong">
             <button
               type="button"
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors",
-                !showExpected ? "bg-accent text-bg" : "text-muted hover:text-fg",
+                "px-3 py-1.5 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] transition-colors",
+                !showExpected ? "bg-accent text-bg" : "text-muted hover:bg-surface-2 hover:text-fg",
               )}
               onClick={() => setShowExpected(false)}
             >
@@ -57,27 +58,28 @@ export function IndependenceScene(_: SceneProps) {
             <button
               type="button"
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors",
-                showExpected ? "bg-accent text-bg" : "text-muted hover:text-fg",
+                "border-l border-border-strong px-3 py-1.5 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] transition-colors",
+                showExpected ? "bg-accent text-bg" : "text-muted hover:bg-surface-2 hover:text-fg",
               )}
               onClick={() => setShowExpected(true)}
             >
               Esperado
             </button>
           </div>
-          <span className="text-[0.68rem] text-faint">
+          <span className="deck-fig">
             {showExpected ? "Esperado = si no hubiera relación" : "Conteos reales de la muestra"}
           </span>
         </div>
       }
     >
-      <div className="grid flex-1 items-center gap-8 lg:grid-cols-[0.78fr_1.22fr]">
+      <div className="grid flex-1 items-center gap-8 xl:grid-cols-[0.78fr_1.22fr]">
         <div>
           <p className="deck-label">Valor p</p>
           <p className="deck-stat mt-2 text-accent">{formatPValue(result.pValue)}</p>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
-            χ² = {formatNumber(result.statistic, 2)} · gl = {result.degreesOfFreedom} · Cramér's V ={" "}
-            {formatNumber(result.cramersV, 2)}.
+            χ² = <AnimatedNumber value={result.statistic} digits={2} /> · gl ={" "}
+            {result.degreesOfFreedom} · Cramér's V ={" "}
+            <AnimatedNumber value={result.cramersV} digits={2} />.
           </p>
 
           <div
@@ -113,8 +115,8 @@ export function IndependenceScene(_: SceneProps) {
 
         <div className="deck-panel p-4 sm:p-5">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <p className="deck-label">Uso para estudiar por nivel de rendimiento</p>
-            <span className="font-mono text-[0.65rem] text-faint">n = {result.total}</span>
+            <p className="deck-fig">Fig. 7 · Uso para estudiar por nivel de rendimiento</p>
+            <span className="font-mono text-[0.62rem] text-faint">n = {result.total}</span>
           </div>
           <ContingencyGrid result={result} showExpected={showExpected} />
           <p className="mt-3 border-t border-border pt-3 text-[0.66rem] leading-relaxed text-faint">

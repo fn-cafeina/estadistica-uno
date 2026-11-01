@@ -25,12 +25,12 @@ interface ScatterPlotProps {
   className?: string;
 }
 
-const WIDTH = 720;
-const HEIGHT = 420;
-const PAD_LEFT = 54;
-const PAD_RIGHT = 20;
+const WIDTH = 900;
+const HEIGHT = 340;
+const PAD_LEFT = 62;
+const PAD_RIGHT = 22;
 const PAD_TOP = 18;
-const PAD_BOTTOM = 48;
+const PAD_BOTTOM = 44;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -94,8 +94,11 @@ export function ScatterPlot({
   const pointerToData = (clientX: number, clientY: number) => {
     const rect = svgRef.current?.getBoundingClientRect();
     if (!rect) return null;
-    const px = ((clientX - rect.left) / rect.width) * WIDTH;
-    const py = ((clientY - rect.top) / rect.height) * HEIGHT;
+    const scale = Math.min(rect.width / WIDTH, rect.height / HEIGHT);
+    const offsetX = (rect.width - WIDTH * scale) / 2;
+    const offsetY = (rect.height - HEIGHT * scale) / 2;
+    const px = (clientX - rect.left - offsetX) / scale;
+    const py = (clientY - rect.top - offsetY) / scale;
     const x = xMin + ((px - PAD_LEFT) / (WIDTH - PAD_LEFT - PAD_RIGHT)) * xRange;
     const y = yMin + ((HEIGHT - PAD_BOTTOM - py) / (HEIGHT - PAD_TOP - PAD_BOTTOM)) * yRange;
     return {

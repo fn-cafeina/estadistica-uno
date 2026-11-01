@@ -40,17 +40,22 @@ export function Histogram({
           const isMean = index === meanBin;
           return (
             <div key={`${row.lower}-${row.upper}`} className="flex h-full flex-1 flex-col justify-end">
-              <span className="mb-1 text-center text-[0.6rem] tabular-nums text-faint">
+              <motion.span
+                initial={reduced ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: reduced ? 0 : 0.3, delay: reduced ? 0 : 0.25 + index * 0.05 }}
+                className="mb-1 text-center font-mono text-[0.58rem] tabular-nums text-faint"
+              >
                 {row.count}
-              </span>
+              </motion.span>
               <motion.div
                 initial={reduced ? false : { height: 0 }}
                 animate={{ height: `${height}%` }}
-                transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : index * 0.035 }}
+                transition={{ duration: reduced ? 0 : 0.62, delay: reduced ? 0 : index * 0.05 }}
                 className={
                   isMean
-                    ? "w-full rounded-t-[3px] border-t-2 border-warning bg-warning/35"
-                    : "w-full rounded-t-[3px] border-t border-accent/70 bg-accent/25"
+                    ? "w-full border-t-2 border-warning bg-warning/30"
+                    : "w-full border-t border-accent/80 bg-accent/20"
                 }
               />
             </div>
@@ -61,10 +66,10 @@ export function Histogram({
         {rows.map((row) => (
           <div
             key={`label-${row.lower}-${row.upper}`}
-            className="min-w-0 flex-1 text-center text-[0.55rem] tabular-nums text-faint"
+            className="min-w-0 flex-1 text-center font-mono text-[0.54rem] tabular-nums text-faint"
             title={formatInterval(row.lower, row.upper)}
           >
-            {formatNumber(row.lower, 0)}
+            {formatNumber(row.lower, 1)}
           </div>
         ))}
       </div>

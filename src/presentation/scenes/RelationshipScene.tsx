@@ -4,6 +4,7 @@ import { pearsonCorrelation } from "../../stats/correlation";
 import { linearRegression } from "../../stats/regression";
 import { formatEquation, formatNumber } from "../../lib/format";
 import { ScatterPlot } from "../visuals/ScatterPlot";
+import { AnimatedNumber } from "../visuals/AnimatedNumber";
 import { SceneFrame, type SceneProps } from "../SceneFrame";
 
 export function RelationshipScene(_: SceneProps) {
@@ -25,12 +26,16 @@ export function RelationshipScene(_: SceneProps) {
   return (
     <SceneFrame
       kicker="05 / EL VÍNCULO"
-      title="Más estudio, ¿mejor promedio?"
+      title={<>Más estudio, <em>¿mejor promedio?</em></>}
       insight="La recta resume la tendencia de esta muestra. Mové las horas de estudio y mirá qué promedio estima el modelo."
     >
-      <div className="grid flex-1 items-center gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="deck-panel h-[clamp(14rem,38vh,28rem)] p-3 sm:p-4">
-          <div className="aspect-[12/7] h-full w-full">
+      <div className="grid flex-1 items-center gap-8 xl:grid-cols-[1.4fr_0.6fr]">
+        <div className="deck-panel flex flex-col p-3 sm:p-4">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <p className="deck-fig">Fig. 5 · Dispersión y recta ajustada</p>
+            <span className="font-mono text-[0.58rem] text-faint">n = {points.length}</span>
+          </div>
+          <div className="aspect-[8/3] w-full">
             <ScatterPlot
               points={points}
               regression={regression}
@@ -48,11 +53,11 @@ export function RelationshipScene(_: SceneProps) {
         <div>
           <p className="deck-label">Correlación</p>
           <p className="deck-stat mt-2 text-accent">
-            {correlation ? formatNumber(correlation.r, 2) : "s/d"}
+            <AnimatedNumber value={correlation?.r} digits={2} />
           </p>
           <p className="mt-2 text-sm text-muted">
             {correlation ? `${correlation.strength}, ${correlation.direction}` : "No calculable"} · R²{" "}
-            {regression ? formatNumber(regression.r2, 2) : "s/d"}
+            <AnimatedNumber value={regression?.r2} digits={2} />
           </p>
 
           <div className="mt-7">
@@ -77,7 +82,7 @@ export function RelationshipScene(_: SceneProps) {
           <div className="mt-7 border-t border-border pt-5">
             <p className="deck-label">Promedio estimado</p>
             <p className="deck-stat mt-2 text-accent">
-              {formatNumber(predicted, 1)}
+              <AnimatedNumber value={predicted} digits={1} duration={0.32} />
               <span className="ml-2 font-sans text-sm font-medium tracking-normal text-muted">
                 puntos
               </span>

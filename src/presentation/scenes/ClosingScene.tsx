@@ -4,7 +4,8 @@ import { useSample } from "../../state/SampleContext";
 import { getCategories, getCategoricalValue } from "../../data/schema";
 import { pearsonCorrelation } from "../../stats/correlation";
 import { chiSquareTest } from "../../stats/chiSquare";
-import { formatNumber, formatPValue } from "../../lib/format";
+import { formatPValue } from "../../lib/format";
+import { AnimatedNumber } from "../visuals/AnimatedNumber";
 import { SceneFrame, type SceneProps } from "../SceneFrame";
 
 const IDEAS = [
@@ -51,7 +52,7 @@ export function ClosingScene({ onRestart, onOpenData }: SceneProps) {
   return (
     <SceneFrame
       kicker="08 / CIERRE"
-      title="Los datos no hablan solos."
+      title={<>Los datos <em>no hablan solos</em>.</>}
       insight="Tres ideas para llevarse. El resto es contexto, supuestos y decisiones."
       footer={
         <div className="flex flex-wrap items-center gap-3">
@@ -85,12 +86,14 @@ export function ClosingScene({ onRestart, onOpenData }: SceneProps) {
         <div className="mt-10 grid max-w-2xl grid-cols-3 gap-6 border-t border-border pt-6">
           <div>
             <p className="deck-label">Registros</p>
-            <p className="deck-stat deck-stat-sm mt-1 text-fg">{sample.n}</p>
+            <p className="deck-stat deck-stat-sm mt-1 text-fg">
+              <AnimatedNumber value={sample.n} digits={0} />
+            </p>
           </div>
           <div>
             <p className="deck-label">Correlación</p>
             <p className="deck-stat deck-stat-sm mt-1 text-accent">
-              {correlation ? formatNumber(correlation.r, 2) : "s/d"}
+              <AnimatedNumber value={correlation?.r} digits={2} />
             </p>
           </div>
           <div>

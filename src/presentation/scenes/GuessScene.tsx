@@ -4,6 +4,7 @@ import { ArrowRight, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { useSample } from "../../state/SampleContext";
 import { pearsonCorrelation } from "../../stats/correlation";
 import { formatNumber, formatSigned } from "../../lib/format";
+import { AnimatedNumber } from "../visuals/AnimatedNumber";
 import { SceneFrame, cn, type SceneProps } from "../SceneFrame";
 
 function GuessScale({
@@ -31,7 +32,7 @@ function GuessScale({
           style={{ left: `${guessPosition}%` }}
         >
           <span className="block h-10 w-px bg-accent" />
-          <span className="absolute left-1/2 top-10 -translate-x-1/2 whitespace-nowrap rounded-md border border-accent/30 bg-surface px-2 py-1 text-[0.62rem] font-semibold text-accent">
+          <span className="absolute left-1/2 top-10 -translate-x-1/2 whitespace-nowrap rounded-[1px] border border-accent/40 bg-surface px-2 py-1 font-mono text-[0.58rem] font-medium uppercase tracking-[0.06em] text-accent">
             tu apuesta {formatSigned(guess)}
           </span>
         </div>
@@ -45,7 +46,7 @@ function GuessScale({
             style={{ left: `${actualPosition}%` }}
           >
             <span className="block h-14 w-0.5 bg-success" />
-            <span className="absolute left-1/2 top-[3.7rem] -translate-x-1/2 whitespace-nowrap rounded-md border border-success/30 bg-surface px-2 py-1 text-[0.62rem] font-semibold text-success">
+            <span className="absolute left-1/2 top-[3.7rem] -translate-x-1/2 whitespace-nowrap rounded-[1px] border border-success/40 bg-surface px-2 py-1 font-mono text-[0.58rem] font-medium uppercase tracking-[0.06em] text-success">
               r real {formatSigned(actual)}
             </span>
           </motion.div>
@@ -81,7 +82,7 @@ export function GuessScene({ onNext }: SceneProps) {
   return (
     <SceneFrame
       kicker="02 / LA APUESTA"
-      title="Antes de mirar los datos, apostá."
+      title={<>Antes de mirar los datos, <em>apostá</em>.</>}
       insight="¿Qué correlación esperás entre horas de estudio y promedio? Pedí un número en voz alta y mové el slider."
       footer={
         <div className="flex flex-wrap items-center gap-3">
@@ -113,14 +114,22 @@ export function GuessScene({ onNext }: SceneProps) {
         </div>
       }
     >
-      <div className="grid flex-1 items-center gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+      <div className="grid flex-1 items-center gap-8 xl:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="deck-label">{revealed ? "Correlación real" : "Tu apuesta"}</p>
           <p
             className={cn("deck-stat mt-2", revealed ? "text-success" : "text-accent")}
             aria-live="polite"
           >
-            {revealed ? (actual === null ? "s/d" : formatSigned(actual)) : formatSigned(guess)}
+            {revealed ? (
+              <AnimatedNumber
+                value={actual}
+                digits={2}
+                prefix={actual !== null && actual > 0 ? "+" : ""}
+              />
+            ) : (
+              formatSigned(guess)
+            )}
           </p>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
             {revealed && correlation ? (

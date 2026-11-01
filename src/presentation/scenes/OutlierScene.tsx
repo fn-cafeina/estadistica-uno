@@ -3,8 +3,8 @@ import { RotateCcw, Move } from "lucide-react";
 import { useSample } from "../../state/SampleContext";
 import { pearsonCorrelation } from "../../stats/correlation";
 import { linearRegression } from "../../stats/regression";
-import { formatNumber, formatSigned } from "../../lib/format";
 import { ScatterPlot, type ScatterPoint } from "../visuals/ScatterPlot";
+import { AnimatedNumber } from "../visuals/AnimatedNumber";
 import { SceneFrame, cn, type SceneProps } from "../SceneFrame";
 
 function largestResidualIndex(points: readonly ScatterPoint[], residuals: readonly number[]): number {
@@ -90,12 +90,16 @@ export function OutlierScene(_: SceneProps) {
   return (
     <SceneFrame
       kicker="06 / EL TRUCO"
-      title="Un solo punto cambia la historia."
+      title={<>Un solo punto <em>cambia la historia</em>.</>}
       insight="Arrastrá el punto ámbar. La recta y la correlación se recalculan en vivo. La relación no es una propiedad fija de los datos."
     >
-      <div className="grid flex-1 items-center gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="deck-panel h-[clamp(14rem,38vh,28rem)] p-3 sm:p-4">
-          <div className="aspect-[12/7] h-full w-full">
+      <div className="grid flex-1 items-center gap-8 xl:grid-cols-[1.4fr_0.6fr]">
+        <div className="deck-panel flex flex-col p-3 sm:p-4">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <p className="deck-fig">Fig. 6 · Influencia de un punto</p>
+            <span className="font-mono text-[0.58rem] text-faint">n = {editedPoints.length}</span>
+          </div>
+          <div className="aspect-[8/3] w-full">
             <ScatterPlot
               points={editedPoints}
               regression={currentRegression}
@@ -121,10 +125,10 @@ export function OutlierScene(_: SceneProps) {
         <div>
           <p className="deck-label">Correlación actual</p>
           <p className="deck-stat mt-2 text-warning">
-            {currentR === null ? "s/d" : formatNumber(currentR, 2)}
+            <AnimatedNumber value={currentR} digits={2} duration={0.28} />
           </p>
           <p className="mt-2 text-sm text-muted">
-            Antes era {baseR === null ? "s/d" : formatNumber(baseR, 2)}.
+            Antes era <AnimatedNumber value={baseR} digits={2} duration={0.28} />.
           </p>
 
           <div className="mt-6 border-t border-border pt-4">
@@ -139,7 +143,12 @@ export function OutlierScene(_: SceneProps) {
                     : "text-fg",
               )}
             >
-              {delta === null ? "s/d" : formatSigned(delta, 3)}
+              <AnimatedNumber
+                value={delta}
+                digits={3}
+                duration={0.28}
+                prefix={delta !== null && delta > 0 ? "+" : ""}
+              />
             </p>
             <p className="mt-2 text-xs leading-relaxed text-muted">
               {delta === null
