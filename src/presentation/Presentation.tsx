@@ -15,14 +15,16 @@ import { SCENE_NOTES } from "./notes";
 import { useDeck } from "./useDeck";
 import { TitleScene } from "./scenes/TitleScene";
 import { GuessScene } from "./scenes/GuessScene";
+import { SampleScene } from "./scenes/SampleScene";
+import { DistributionScene } from "./scenes/DistributionScene";
 import type { SceneProps } from "./SceneFrame";
 import "./deck.css";
 
 const SCENES: Array<ComponentType<SceneProps> | null> = [
   TitleScene,
   GuessScene,
-  null,
-  null,
+  SampleScene,
+  DistributionScene,
   null,
   null,
   null,
