@@ -9,120 +9,38 @@
 }
 
 @font-face {
-  font-family: "Space Grotesk Variable";
-  src: url("./assets/fonts/space-grotesk-latin-wght-normal.woff2") format("woff2");
-  font-weight: 300 700;
+  font-family: "Instrument Serif";
+  src: url("./assets/fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
-:root,
-[data-theme="mocha"] {
+:root {
   color-scheme: dark;
-  --bg: #11111b;
-  --surface: #181825;
-  --surface-2: #1e1e2e;
-  --surface-3: #313244;
-  --border: rgba(205, 214, 244, 0.1);
-  --border-strong: rgba(205, 214, 244, 0.18);
-  --text: #cdd6f4;
-  --muted: #a6adc8;
-  --faint: #7f849c;
-  --accent: #89b4fa;
-  --accent-2: #cba6f7;
-  --success: #a6e3a1;
-  --warning: #f9e2af;
-  --danger: #f38ba8;
-  --grid: rgba(205, 214, 244, 0.08);
-  --glow: rgba(137, 180, 250, 0.15);
-  --chart-1: #89b4fa;
-  --chart-2: #cba6f7;
-  --chart-3: #a6e3a1;
-  --chart-4: #f9e2af;
-  --chart-5: #fab387;
-  --chart-6: #94e2d5;
-  --shadow: 0 18px 55px rgba(0, 0, 0, 0.24);
-}
-
-[data-theme="rose-pine"] {
-  color-scheme: dark;
-  --bg: #232136;
-  --surface: #2a273f;
-  --surface-2: #312f46;
-  --surface-3: #393552;
-  --border: rgba(224, 222, 244, 0.1);
-  --border-strong: rgba(224, 222, 244, 0.18);
-  --text: #e0def4;
-  --muted: #908caa;
-  --faint: #6e6a86;
-  --accent: #c4a7e7;
-  --accent-2: #ebbcba;
-  --success: #9ccfd8;
-  --warning: #f6c177;
-  --danger: #eb6f92;
-  --grid: rgba(224, 222, 244, 0.08);
-  --glow: rgba(196, 167, 231, 0.16);
-  --chart-1: #c4a7e7;
-  --chart-2: #ebbcba;
-  --chart-3: #9ccfd8;
-  --chart-4: #f6c177;
-  --chart-5: #31748f;
-  --chart-6: #ea9a97;
-  --shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
-}
-
-[data-theme="github"] {
-  color-scheme: dark;
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface-2: #1c2128;
-  --surface-3: #21262d;
-  --border: #30363d;
-  --border-strong: #484f58;
-  --text: #e6edf3;
-  --muted: #8b949e;
-  --faint: #6e7681;
-  --accent: #58a6ff;
-  --accent-2: #bc8cff;
-  --success: #3fb950;
-  --warning: #d29922;
-  --danger: #f85149;
-  --grid: rgba(230, 237, 243, 0.08);
-  --glow: rgba(88, 166, 255, 0.13);
-  --chart-1: #58a6ff;
-  --chart-2: #bc8cff;
-  --chart-3: #3fb950;
-  --chart-4: #d29922;
-  --chart-5: #39c5cf;
-  --chart-6: #ff7b72;
-  --shadow: 0 18px 55px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="ayu"] {
-  color-scheme: dark;
-  --bg: #0b0e14;
-  --surface: #0f131a;
-  --surface-2: #151a21;
-  --surface-3: #1c212b;
-  --border: #2d3640;
-  --border-strong: #3d4752;
-  --text: #bfbdb6;
-  --muted: #9da5b0;
-  --faint: #6c7380;
-  --accent: #59c2ff;
-  --accent-2: #e6b450;
-  --success: #aad94c;
-  --warning: #ffb454;
-  --danger: #f07178;
-  --grid: rgba(191, 189, 182, 0.08);
-  --glow: rgba(89, 194, 255, 0.13);
-  --chart-1: #59c2ff;
-  --chart-2: #e6b450;
-  --chart-3: #aad94c;
-  --chart-4: #f29668;
-  --chart-5: #95e6cb;
-  --chart-6: #d2a6ff;
-  --shadow: 0 18px 55px rgba(0, 0, 0, 0.32);
+  --bg: #0b0e13;
+  --surface: #11161d;
+  --surface-2: #161c24;
+  --surface-3: #1d2530;
+  --border: rgba(233, 227, 216, 0.12);
+  --border-strong: rgba(233, 227, 216, 0.22);
+  --text: #e9e3d8;
+  --muted: #a6a8a6;
+  --faint: #737b84;
+  --accent: #8fb8ff;
+  --accent-2: #c9a7ff;
+  --success: #9ed0b7;
+  --warning: #e8c27a;
+  --danger: #e39bae;
+  --grid: rgba(233, 227, 216, 0.08);
+  --glow: rgba(143, 184, 255, 0.16);
+  --chart-1: #8fb8ff;
+  --chart-2: #c9a7ff;
+  --chart-3: #9ed0b7;
+  --chart-4: #e8c27a;
+  --chart-5: #e39bae;
+  --chart-6: #9ad5d0;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 }
 
 @theme inline {
@@ -141,7 +59,7 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk Variable", "Inter Variable", ui-sans-serif, sans-serif;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -656,7 +574,7 @@
     margin: 14mm;
   }
 
-  html[data-theme] {
+  :root {
     color-scheme: light;
     --bg: #ffffff;
     --surface: #ffffff;
