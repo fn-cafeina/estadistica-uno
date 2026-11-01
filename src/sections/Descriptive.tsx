@@ -197,7 +197,7 @@ export function Descriptive() {
             <Metric label="Q1" value={formatNumber(summary.q1, 1)} hint="25% debajo" />
             <Metric label="Q3" value={formatNumber(summary.q3, 1)} hint="75% debajo" />
             <Metric label="IQR" value={formatNumber(summary.iqr, 1)} hint="Q3 menos Q1" />
-            <Metric label="CV" value={summary.cv === null ? "—" : formatPercent(summary.cv)} hint="Desviación / media" />
+            <Metric label="CV" value={summary.cv === null ? "s/d" : formatPercent(summary.cv)} hint="Desviación / media" />
           </div>
 
           <Card className="p-4 sm:p-5">

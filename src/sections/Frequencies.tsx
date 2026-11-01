@@ -241,7 +241,7 @@ export function Frequencies() {
                         ))}
                         <tr className="bg-surface-2 font-semibold">
                           <td>Total</td>
-                          <td className="num">—</td>
+                          <td className="num">s/d</td>
                           <td className="num">{grouped.total}</td>
                           <td className="num">{formatNumber(1, 3)}</td>
                           <td className="num">{formatPercent(100)}</td>

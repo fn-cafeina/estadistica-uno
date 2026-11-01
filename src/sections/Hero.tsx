@@ -105,7 +105,7 @@ export function Hero() {
             />
             <Metric
               label="Correlación r"
-              value={correlation ? formatNumber(correlation.r, 2) : "—"}
+              value={correlation ? formatNumber(correlation.r, 2) : "s/d"}
               hint="Estudio y promedio"
               icon={TrendingUp}
             />
@@ -135,7 +135,7 @@ export function Hero() {
                   Cada punto es un registro de la muestra visible.
                 </p>
               </div>
-              <Badge tone="accent">r = {correlation ? formatNumber(correlation.r, 2) : "—"}</Badge>
+              <Badge tone="accent">r = {correlation ? formatNumber(correlation.r, 2) : "s/d"}</Badge>
             </div>
 
             <div className="mt-4 h-64 sm:h-72">

@@ -1,7 +1,7 @@
 const LOCALE = "es-NI";
 
 export function formatNumber(value: number | null | undefined, digits = 1): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
   return new Intl.NumberFormat(LOCALE, {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
@@ -9,31 +9,31 @@ export function formatNumber(value: number | null | undefined, digits = 1): stri
 }
 
 export function formatInteger(value: number | null | undefined): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
   return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(value);
 }
 
 export function formatPercent(value: number | null | undefined, digits = 1): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
   return `${formatNumber(value, digits)}%`;
 }
 
 export function formatPValue(value: number | null | undefined): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
   if (value < 0.001) return "< 0.001";
   return formatNumber(value, 3);
 }
 
 export function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
+  if (!iso) return "s/d";
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "—";
+  if (Number.isNaN(date.getTime())) return "s/d";
   return new Intl.DateTimeFormat(LOCALE, { dateStyle: "medium", timeStyle: "short" }).format(date);
 }
 
 export function formatUnit(value: number | null | undefined, unit: string | null, digits = 1): string {
   const formatted = formatNumber(value, digits);
-  return unit && formatted !== "—" ? `${formatted} ${unit}` : formatted;
+  return unit && formatted !== "s/d" ? `${formatted} ${unit}` : formatted;
 }
 
 export function formatInterval(lower: number, upper: number, digits = 1): string {
@@ -41,7 +41,7 @@ export function formatInterval(lower: number, upper: number, digits = 1): string
 }
 
 export function formatSigned(value: number | null | undefined, digits = 2): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
   const formatted = formatNumber(value, digits);
   return value > 0 ? `+${formatted}` : formatted;
 }

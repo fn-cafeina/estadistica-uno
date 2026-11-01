@@ -141,9 +141,9 @@ export function Interpretation() {
         <Metric label="Registros" value={String(filteredRows.length)} hint="Muestra visible" accent />
         <Metric label="Promedio medio" value={formatNumber(averageGpa, 1)} hint="Puntos" />
         <Metric label="Pantalla media" value={formatNumber(averageScreen, 1)} hint="h/día" />
-        <Metric label="r estudio-promedio" value={correlation ? formatNumber(correlation.r, 2) : "—"} hint={correlation ? correlation.strength : "No calculable"} />
-        <Metric label="R²" value={regression ? formatNumber(regression.r2, 2) : "—"} hint="Variabilidad explicada" />
-        <Metric label="Chi-cuadrado p" value={chiResult ? formatPValue(chiResult.pValue) : "—"} hint={`α = ${state.alpha}`} />
+        <Metric label="r estudio-promedio" value={correlation ? formatNumber(correlation.r, 2) : "s/d"} hint={correlation ? correlation.strength : "No calculable"} />
+        <Metric label="R²" value={regression ? formatNumber(regression.r2, 2) : "s/d"} hint="Variabilidad explicada" />
+        <Metric label="Chi-cuadrado p" value={chiResult ? formatPValue(chiResult.pValue) : "s/d"} hint={`α = ${state.alpha}`} />
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
@@ -198,20 +198,20 @@ export function Interpretation() {
               </div>
               <div className="flex items-baseline justify-between gap-4 border-b border-border/70 py-2">
                 <dt className="text-muted">r estudio-promedio</dt>
-                <dd className="font-semibold text-fg">{correlation ? formatNumber(correlation.r, 3) : "—"}</dd>
+                <dd className="font-semibold text-fg">{correlation ? formatNumber(correlation.r, 3) : "s/d"}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-4 border-b border-border/70 py-2">
                 <dt className="text-muted">R² de la regresión</dt>
-                <dd className="font-semibold text-fg">{regression ? formatNumber(regression.r2, 3) : "—"}</dd>
+                <dd className="font-semibold text-fg">{regression ? formatNumber(regression.r2, 3) : "s/d"}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-4 border-b border-border/70 py-2">
                 <dt className="text-muted">Chi-cuadrado</dt>
-                <dd className="font-semibold text-fg">{chiResult ? formatNumber(chiResult.statistic, 2) : "—"}</dd>
+                <dd className="font-semibold text-fg">{chiResult ? formatNumber(chiResult.statistic, 2) : "s/d"}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-4 py-2">
                 <dt className="text-muted">Decisión chi-cuadrado</dt>
                 <dd className="text-right font-semibold text-fg">
-                  {chiResult ? pDecision(chiResult.pValue, state.alpha) : "—"}
+                  {chiResult ? pDecision(chiResult.pValue, state.alpha) : "s/d"}
                 </dd>
               </div>
             </dl>
