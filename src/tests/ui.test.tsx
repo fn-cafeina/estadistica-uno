@@ -109,3 +109,33 @@ test("regenera la muestra desde la barra superior", async () => {
   fireEvent.click(screen.getByRole("button", { name: /generar nueva muestra/i }));
   expect(await screen.findByText(/semilla/i)).toBeTruthy();
 });
+
+test("revela la correlación real en la escena de apuesta", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
+  fireEvent.click(await screen.findByRole("button", { name: /^revelar$/i }));
+  expect(await screen.findByText(/correlación real/i)).toBeTruthy();
+  expect(screen.getByText(/la relación es/i)).toBeTruthy();
+});
+
+test("navega a la prueba y alterna observado con esperado", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /ir a la escena 7/i }));
+  expect(
+    await screen.findByRole("heading", { name: /¿uso y rendimiento van juntos\?/i }),
+  ).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: /^esperado$/i }));
+  expect(await screen.findByText(/esperado = si no hubiera relación/i)).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: /^observado$/i }));
+  expect(await screen.findByText(/conteos reales de la muestra/i)).toBeTruthy();
+});
+
+test("cambia las pestañas del panel de datos", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /mostrar panel de datos/i }));
+  fireEvent.click(await screen.findByRole("tab", { name: /resumen/i }));
+  expect(await screen.findByText(/promedio medio/i)).toBeTruthy();
+  fireEvent.click(screen.getByRole("tab", { name: /muestra/i }));
+  expect(await screen.findByText(/carrera/i)).toBeTruthy();
+});
