@@ -17,6 +17,8 @@ import { TitleScene } from "./scenes/TitleScene";
 import { GuessScene } from "./scenes/GuessScene";
 import { SampleScene } from "./scenes/SampleScene";
 import { DistributionScene } from "./scenes/DistributionScene";
+import { RelationshipScene } from "./scenes/RelationshipScene";
+import { OutlierScene } from "./scenes/OutlierScene";
 import type { SceneProps } from "./SceneFrame";
 import "./deck.css";
 
@@ -25,8 +27,8 @@ const SCENES: Array<ComponentType<SceneProps> | null> = [
   GuessScene,
   SampleScene,
   DistributionScene,
-  null,
-  null,
+  RelationshipScene,
+  OutlierScene,
   null,
   null,
 ];
