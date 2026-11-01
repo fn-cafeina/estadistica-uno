@@ -1,6 +1,6 @@
 # Estadistica Uno
 
-Trabajo final de Estadística Introductoria.
+Proyecto de Estadística Introductoria — Ingeniería en Sistemas, UNAN-León. 3er año, II semestre, 2026.
 
 **Tema:** Uso de la tecnología y rendimiento académico universitario.
 
