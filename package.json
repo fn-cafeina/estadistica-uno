@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "bun ./index.html",
     "build": "bun run build.ts",
+    "preview": "bun run build && bun run server.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "check": "bun run typecheck && bun test && bun run build"

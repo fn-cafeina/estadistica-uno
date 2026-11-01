@@ -16,5 +16,5 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["bun"]
   },
-  "include": ["src", "build.ts", "index.html"]
+  "include": ["src", "build.ts", "server.ts", "index.html"]
 }

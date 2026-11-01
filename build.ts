@@ -3,7 +3,6 @@ import tailwind from "bun-plugin-tailwind";
 const result = await Bun.build({
   entrypoints: ["./index.html"],
   outdir: "./dist",
-  compile: true,
   target: "browser",
   minify: true,
   plugins: [tailwind],
