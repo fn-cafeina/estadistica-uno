@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es" data-theme="mocha">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aplicación educativa de estadística aplicada sobre uso de la tecnología y rendimiento académico universitario. Datos sintéticos."
+    />
+    <meta name="theme-color" content="#11111b" />
+    <title>Tecnología y rendimiento académico | Estadística Uno</title>
+    <script>
+      (() => {
+        const themes = new Set(["mocha", "rose-pine", "github", "ayu"]);
+        try {
+          const saved = localStorage.getItem("estadistica-theme");
+          if (saved && themes.has(saved)) {
+            document.documentElement.dataset.theme = saved;
+          }
+        } catch {
+          /* localStorage puede estar bloqueado; se mantiene el tema por defecto */
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Esta aplicación necesita JavaScript para calcular y mostrar los resultados.</noscript>
+    <script type="module" src="./src/main.tsx"></script>
+  </body>
+</html>
