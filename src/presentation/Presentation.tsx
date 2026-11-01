@@ -19,6 +19,8 @@ import { SampleScene } from "./scenes/SampleScene";
 import { DistributionScene } from "./scenes/DistributionScene";
 import { RelationshipScene } from "./scenes/RelationshipScene";
 import { OutlierScene } from "./scenes/OutlierScene";
+import { IndependenceScene } from "./scenes/IndependenceScene";
+import { ClosingScene } from "./scenes/ClosingScene";
 import type { SceneProps } from "./SceneFrame";
 import "./deck.css";
 
@@ -29,8 +31,8 @@ const SCENES: Array<ComponentType<SceneProps> | null> = [
   DistributionScene,
   RelationshipScene,
   OutlierScene,
-  null,
-  null,
+  IndependenceScene,
+  ClosingScene,
 ];
 
 function PlaceholderScene({ index }: { index: number }) {
@@ -248,7 +250,7 @@ export function Presentation() {
             className="flex min-h-0 flex-1"
           >
             {ActiveScene ? (
-              <ActiveScene onNext={next} />
+              <ActiveScene onNext={next} onRestart={() => goTo(0)} />
             ) : (
               <PlaceholderScene index={index} />
             )}
