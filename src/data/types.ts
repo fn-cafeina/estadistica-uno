@@ -64,8 +64,6 @@ export interface Sample {
   generatedAt: string;
 }
 
-export const SAMPLE_SIZES = [40, 80, 120] as const;
-export type SampleSize = (typeof SAMPLE_SIZES)[number];
-export const DEFAULT_SAMPLE_SIZE: SampleSize = 80;
+export const DEFAULT_SAMPLE_SIZE = 80;
 export const DEFAULT_SEED = 20260214;
 

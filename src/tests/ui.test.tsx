@@ -49,6 +49,25 @@ mock.module("motion/react", () => ({
   useReducedMotion: () => true,
 }));
 
+mock.module("../presentation/visuals/AnimatedNumber", () => ({
+  AnimatedNumber: ({
+    value,
+    digits = 1,
+    prefix = "",
+    suffix = "",
+  }: {
+    value: number | null | undefined;
+    digits?: number;
+    prefix?: string;
+    suffix?: string;
+  }) =>
+    createElement(
+      "span",
+      null,
+      value === null || value === undefined ? "s/d" : `${prefix}${value.toFixed(digits)}${suffix}`,
+    ),
+}));
+
 const { cleanup, fireEvent, render, screen, waitFor } = await import("@testing-library/react");
 const { App } = await import("../App");
 
@@ -63,6 +82,19 @@ test("abre en la portada de la presentación", async () => {
   ).toBeTruthy();
   expect(screen.getAllByText(/80 estudiantes que no existen/i).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/01 \/ 08/i).length).toBeGreaterThan(0);
+});
+
+test("un click en el escenario no cambia de escena", async () => {
+  const { container } = render(createElement(App));
+  const stage = container.querySelector(".deck-stage");
+  expect(stage).toBeTruthy();
+
+  fireEvent.click(stage!);
+
+  expect(
+    screen.getByRole("heading", { name: /tecnología y rendimiento académico/i }),
+  ).toBeTruthy();
+  expect(screen.queryByRole("heading", { name: /antes de mirar los datos/i })).toBeNull();
 });
 
 test("avanza con el botón y con la flecha derecha", async () => {
@@ -104,10 +136,18 @@ test("muestra y oculta las notas del presentador", async () => {
   });
 });
 
-test("regenera la muestra desde la barra superior", async () => {
+test("regenera la muestra desde la barra superior y mantiene n = 80", async () => {
   render(createElement(App));
   fireEvent.click(screen.getByRole("button", { name: /generar nueva muestra/i }));
-  expect(await screen.findByText(/semilla/i)).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: /mostrar panel de datos/i }));
+  expect(await screen.findByText(/muestra fija · n = 80/i)).toBeTruthy();
+});
+
+test("las tablas quedan dentro de contenedores con scroll", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /mostrar panel de datos/i }));
+  await screen.findByRole("dialog", { name: /panel de datos/i });
+  expect(document.querySelectorAll(".deck-table-wrap").length).toBeGreaterThan(0);
 });
 
 test("revela la correlación real en la escena de apuesta", async () => {
@@ -122,7 +162,7 @@ test("navega a la prueba y alterna observado con esperado", async () => {
   render(createElement(App));
   fireEvent.click(screen.getByRole("button", { name: /ir a la escena 7/i }));
   expect(
-    await screen.findByRole("heading", { name: /¿uso y rendimiento van juntos\?/i }),
+    await screen.findByRole("heading", { name: /uso y rendimiento/i }),
   ).toBeTruthy();
 
   fireEvent.click(screen.getByRole("button", { name: /^esperado$/i }));

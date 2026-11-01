@@ -8,7 +8,7 @@ export const SCENE_NOTES: readonly SceneNote[] = [
     title: "Portada",
     notes: [
       "No expliques nada todavía. Dejá que la nube de puntos haga la primera impresión.",
-      "Preguntá al público qué espera encontrar en una muestra de 80 estudiantes.",
+      "Preguntá al público qué espera encontrar en la muestra.",
     ],
   },
   {

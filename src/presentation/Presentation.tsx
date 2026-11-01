@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
+import { useCallback, useEffect, useState, type ComponentType } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ChevronLeft,
@@ -7,7 +7,6 @@ import {
   Maximize2,
   Minimize2,
   RefreshCw,
-  Sigma,
   StickyNote,
   X,
 } from "lucide-react";
@@ -58,14 +57,13 @@ function PlaceholderScene({ index }: { index: number }) {
 }
 
 export function Presentation() {
-  const { sample, sampleSize, regenerate } = useSample();
+  const { sample, regenerate } = useSample();
   const reduced = useReducedMotion();
   const sceneCount = SCENE_NOTES.length;
   const { index, direction, goTo, next, prev } = useDeck(sceneCount);
   const [notesOpen, setNotesOpen] = useState(false);
   const [dataOpen, setDataOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const currentNote = SCENE_NOTES[index];
   const ActiveScene = SCENES[index];
 
@@ -162,41 +160,31 @@ export function Presentation() {
         exit: { opacity: 0 },
       }
     : {
-        enter: (move: number) => ({ opacity: 0, x: move > 0 ? 64 : -64, filter: "blur(6px)" }),
-        center: { opacity: 1, x: 0, filter: "blur(0px)" },
-        exit: (move: number) => ({ opacity: 0, x: move > 0 ? -64 : 64, filter: "blur(6px)" }),
+        enter: (move: number) => ({
+          opacity: 0,
+          x: move > 0 ? 84 : -84,
+          y: 10,
+          scale: 0.994,
+          filter: "blur(5px)",
+        }),
+        center: { opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)" },
+        exit: (move: number) => ({
+          opacity: 0,
+          x: move > 0 ? -70 : 70,
+          y: -6,
+          scale: 0.996,
+          filter: "blur(5px)",
+        }),
       };
 
   return (
-    <div
-      className="deck-stage"
-      onPointerDown={(event) => {
-        if ((event.target as HTMLElement).closest("input, button, a, select, textarea")) return;
-        pointerStart.current = { x: event.clientX, y: event.clientY };
-      }}
-      onPointerUp={(event) => {
-        const start = pointerStart.current;
-        pointerStart.current = null;
-        if (!start) return;
-        const dx = event.clientX - start.x;
-        const dy = event.clientY - start.y;
-        if (Math.abs(dx) > 64 && Math.abs(dx) > Math.abs(dy) * 1.4) {
-          if (dx < 0) next();
-          else prev();
-        }
-      }}
-    >
-      <div aria-hidden="true" className="deck-orb deck-orb-a" />
-      <div aria-hidden="true" className="deck-orb deck-orb-b" />
-
+    <div className="deck-stage">
       <header className="deck-topbar">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-accent/25 bg-accent/10 text-accent">
-            <Sigma aria-hidden="true" size={17} strokeWidth={2} />
-          </span>
+        <div className="deck-masthead">
+          <span className="deck-masthead-mark" aria-hidden="true">Σ</span>
           <div className="min-w-0">
-            <p className="truncate text-xs font-semibold tracking-tight text-fg">Estadística Uno</p>
-            <p className="truncate text-[0.62rem] text-faint">Tecnología y rendimiento</p>
+            <p className="deck-masthead-title">Estadística Uno</p>
+            <p className="deck-masthead-meta">Tecnología y rendimiento · Vol. 1 · 2026</p>
           </div>
         </div>
 
@@ -221,7 +209,7 @@ export function Presentation() {
             className="deck-icon-button"
             title="Nueva muestra (R)"
             aria-label="Generar nueva muestra"
-            onClick={() => regenerate(sampleSize)}
+            onClick={regenerate}
           >
             <RefreshCw aria-hidden="true" size={16} />
           </button>
@@ -269,6 +257,14 @@ export function Presentation() {
         </div>
       </header>
 
+      <motion.div
+        key={`rule-${index}`}
+        className="deck-transition-rule"
+        initial={{ scaleX: 0, opacity: 1 }}
+        animate={{ scaleX: 1, opacity: 0 }}
+        transition={{ duration: reduced ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+      />
+
       <div className="flex min-h-0 flex-1">
         <AnimatePresence initial={false} mode="wait" custom={direction}>
           <motion.div
@@ -278,7 +274,7 @@ export function Presentation() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: reduced ? 0 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: reduced ? 0 : 0.52, ease: [0.22, 1, 0.36, 1] }}
             className="flex min-h-0 flex-1"
           >
             {ActiveScene ? (
@@ -322,12 +318,13 @@ export function Presentation() {
           </button>
         </div>
 
-        <p className="deck-swipe-hint ml-auto hidden sm:block">
+        <span className="deck-hint ml-4 hidden xl:block">
+          UNAN-León · Ingeniería en Sistemas
+        </span>
+        <p className="deck-hint ml-auto hidden sm:block">
           Flechas para navegar · D datos · N notas · F pantalla completa
         </p>
-        <p className="ml-auto text-[0.65rem] tabular-nums text-faint sm:hidden">
-          Semilla {sample.seed}
-        </p>
+        <p className="deck-hint ml-auto tabular-nums sm:hidden">Semilla {sample.seed}</p>
       </footer>
 
       <span className="sr-only" aria-live="polite">
@@ -365,8 +362,10 @@ export function Presentation() {
                 </p>
               ))}
             </div>
-            <p className="mt-6 text-[0.66rem] leading-relaxed text-faint">
-              Las notas solo las ves vos. La audiencia ve la escena.
+            <p className="mt-6 border-t border-border pt-3 text-[0.66rem] leading-relaxed text-faint">
+              Muestra fija de {sample.n} registros · semilla{" "}
+              <span className="font-mono text-muted">{sample.seed}</span>. Las notas solo las ves
+              vos.
             </p>
           </motion.aside>
         ) : null}

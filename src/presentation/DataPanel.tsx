@@ -2,10 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Download, RefreshCw, X } from "lucide-react";
 import { useSample } from "../state/SampleContext";
-import {
-  SAMPLE_SIZES,
-  type SampleSize,
-} from "../data/types";
 import { VARIABLES, getCategories, getCategoricalValue } from "../data/schema";
 import { describe } from "../stats/descriptive";
 import { pearsonCorrelation } from "../stats/correlation";
@@ -24,7 +20,7 @@ const TYPE_LABEL = {
 } as const;
 
 export function DataPanel({ onClose }: { onClose: () => void }) {
-  const { sample, sampleSize, setSampleSize, regenerate, exportCsv } = useSample();
+  const { sample, regenerate, exportCsv } = useSample();
   const [tab, setTab] = useState<Tab>("variables");
   const reduced = useReducedMotion();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -96,25 +92,8 @@ export function DataPanel({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-2 border-y border-border py-3">
-          <label className="flex items-center gap-2 text-xs text-muted">
-            <span className="text-faint">Tamaño</span>
-            <select
-              className="h-9 w-24 rounded-md border border-border bg-surface-2 px-2 py-1 text-xs text-fg"
-              value={sampleSize}
-              onChange={(event) => setSampleSize(Number(event.target.value) as SampleSize)}
-            >
-              {SAMPLE_SIZES.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button
-            type="button"
-            className="deck-control"
-            onClick={() => regenerate(sampleSize)}
-          >
+          <span className="deck-chip">Muestra fija · n = {sample.n}</span>
+          <button type="button" className="deck-control" onClick={regenerate}>
             <RefreshCw aria-hidden="true" size={14} />
             Nueva muestra
           </button>
@@ -136,10 +115,10 @@ export function DataPanel({ onClose }: { onClose: () => void }) {
               role="tab"
               aria-selected={tab === item.id}
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors",
+                "rounded-[1px] border px-3 py-1.5 font-mono text-[0.62rem] font-medium uppercase tracking-[0.08em] transition-colors",
                 tab === item.id
-                  ? "bg-accent text-bg"
-                  : "text-muted hover:bg-surface-2 hover:text-fg",
+                  ? "border-accent bg-accent text-bg"
+                  : "border-transparent text-muted hover:border-border-strong hover:text-fg",
               )}
               onClick={() => setTab(item.id)}
             >
@@ -150,56 +129,66 @@ export function DataPanel({ onClose }: { onClose: () => void }) {
 
         <div className="mt-4" role="tabpanel">
           {tab === "variables" ? (
-            <table className="deck-table">
-              <thead>
-                <tr>
-                  <th scope="col">Variable</th>
-                  <th scope="col">Tipo</th>
-                  <th scope="col">Código</th>
-                </tr>
-              </thead>
-              <tbody>
-                {VARIABLES.map((variable) => (
-                  <tr key={variable.key}>
-                    <td className="font-medium text-fg">{variable.label}</td>
-                    <td className="whitespace-nowrap text-muted">{TYPE_LABEL[variable.type]}</td>
-                    <td className="max-w-[18ch] text-[0.68rem] leading-relaxed text-faint">
-                      {variable.unit ? `${variable.unit}. ` : ""}
-                      {variable.coding}
-                    </td>
+            <div className="deck-table-wrap">
+              <table className="deck-table min-w-[18rem] sm:min-w-[30rem]">
+                <thead>
+                  <tr>
+                    <th scope="col">Variable</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col" className="hidden sm:table-cell">Código</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {VARIABLES.map((variable) => (
+                    <tr key={variable.key}>
+                      <td className="font-medium text-fg">
+                        {variable.label}
+                        <span className="mt-1 block text-[0.66rem] leading-relaxed text-faint sm:hidden">
+                          {variable.unit ? `${variable.unit}. ` : ""}
+                          {variable.coding}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap text-muted">{TYPE_LABEL[variable.type]}</td>
+                      <td className="hidden max-w-[18ch] text-[0.68rem] leading-relaxed text-faint sm:table-cell">
+                        {variable.unit ? `${variable.unit}. ` : ""}
+                        {variable.coding}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : null}
 
           {tab === "sample" ? (
-            <table className="deck-table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Carrera</th>
-                  <th scope="col">Pantalla</th>
-                  <th scope="col">Estudio</th>
-                  <th scope="col">Promedio</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sample.rows.slice(0, 10).map((row) => (
-                  <tr key={row.id}>
-                    <td className="font-mono text-[0.65rem] text-faint">
-                      {String(row.id).padStart(2, "0")}
-                    </td>
-                    <td className="max-w-[16ch] truncate text-muted" title={row.major}>
-                      {row.major}
-                    </td>
-                    <td>{formatNumber(row.screenHours, 1)}</td>
-                    <td>{formatNumber(row.studyHours, 1)}</td>
-                    <td className="font-semibold text-fg">{formatNumber(row.gpa, 1)}</td>
+            <div className="deck-table-wrap">
+              <table className="deck-table min-w-[34rem]">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col" className="num">Pantalla</th>
+                    <th scope="col" className="num">Estudio</th>
+                    <th scope="col" className="num">Promedio</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {sample.rows.slice(0, 10).map((row) => (
+                    <tr key={row.id}>
+                      <td className="font-mono text-[0.65rem] text-faint">
+                        {String(row.id).padStart(2, "0")}
+                      </td>
+                      <td className="max-w-[16ch] truncate text-muted" title={row.major}>
+                        {row.major}
+                      </td>
+                      <td className="num">{formatNumber(row.screenHours, 1)}</td>
+                      <td className="num">{formatNumber(row.studyHours, 1)}</td>
+                      <td className="num font-semibold text-fg">{formatNumber(row.gpa, 1)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : null}
 
           {tab === "summary" ? (
@@ -228,12 +217,12 @@ export function DataPanel({ onClose }: { onClose: () => void }) {
                     : "s/d",
                 },
               ].map((item) => (
-                <div key={item.label} className="rounded-lg border border-border bg-surface/60 p-3">
+                <div key={item.label} className="border border-border bg-surface-2/40 p-3">
                   <p className="deck-label">{item.label}</p>
                   <p className="mt-1 text-lg font-semibold tabular-nums text-fg">{item.value}</p>
                 </div>
               ))}
-              <div className="col-span-2 rounded-lg border border-border bg-surface/60 p-3">
+              <div className="col-span-2 border border-border bg-surface-2/40 p-3">
                 <p className="deck-label">Muestra</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted">
                   {sample.n} registros sintéticos. La descarga incluye las 13 variables y la semilla{" "}
