@@ -89,7 +89,7 @@ export function OutlierScene(_: SceneProps) {
 
   return (
     <SceneFrame
-      kicker="06 / EL TRUCO"
+      kicker="07 / EL TRUCO"
       title={<>Un solo punto <em>cambia la historia</em>.</>}
       insight="Arrastrá el punto ámbar. La recta y la correlación se recalculan en vivo. La relación no es una propiedad fija de los datos."
     >

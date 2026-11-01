@@ -80,8 +80,7 @@ test("abre en la portada de la presentación", async () => {
   expect(
     screen.getByRole("heading", { name: /tecnología y rendimiento académico/i }),
   ).toBeTruthy();
-  expect(screen.getAllByText(/80 estudiantes que no existen/i).length).toBeGreaterThan(0);
-  expect(screen.getAllByText(/01 \/ 08/i).length).toBeGreaterThan(0);
+  expect(screen.getAllByText(/01 \/ 09/i).length).toBeGreaterThan(0);
 });
 
 test("un click en el escenario no cambia de escena", async () => {
@@ -94,7 +93,7 @@ test("un click en el escenario no cambia de escena", async () => {
   expect(
     screen.getByRole("heading", { name: /tecnología y rendimiento académico/i }),
   ).toBeTruthy();
-  expect(screen.queryByRole("heading", { name: /antes de mirar los datos/i })).toBeNull();
+  expect(screen.queryByRole("heading", { name: /quiénes presentan/i })).toBeNull();
 });
 
 test("avanza con el botón y con la flecha derecha", async () => {
@@ -102,13 +101,25 @@ test("avanza con el botón y con la flecha derecha", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
   expect(
-    await screen.findByRole("heading", { name: /antes de mirar los datos, apostá/i }),
+    await screen.findByRole("heading", { name: /quiénes presentan/i }),
   ).toBeTruthy();
 
   fireEvent.keyDown(document.body, { key: "ArrowRight" });
-  expect(
-    await screen.findByRole("heading", { name: /80 estudiantes que no existen/i }),
-  ).toBeTruthy();
+  expect(await screen.findByRole("heading", { name: /^la pregunta/i })).toBeTruthy();
+});
+
+test("presenta al grupo en la introducción", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
+
+  for (const name of [
+    "Jasmir Moisés Medina Pérez",
+    "Samuel Santiago Salgado Selva",
+    "Gonzalo Javier Blanco Cardoza",
+    "Franklin Isaac Aguirre Zamora",
+  ]) {
+    expect(await screen.findByText(name)).toBeTruthy();
+  }
 });
 
 test("abre y cierra el panel de datos", async () => {
@@ -128,11 +139,11 @@ test("muestra y oculta las notas del presentador", async () => {
   render(createElement(App));
 
   fireEvent.click(screen.getByRole("button", { name: /mostrar notas del presentador/i }));
-  expect(await screen.findByText(/no expliques nada todavía/i)).toBeTruthy();
+  expect(await screen.findByText(/presentamos el tema/i)).toBeTruthy();
 
   fireEvent.keyDown(document.body, { key: "Escape" });
   await waitFor(() => {
-    expect(screen.queryByText(/no expliques nada todavía/i)).toBeNull();
+    expect(screen.queryByText(/presentamos el tema/i)).toBeNull();
   });
 });
 
@@ -150,17 +161,9 @@ test("las tablas quedan dentro de contenedores con scroll", async () => {
   expect(document.querySelectorAll(".deck-table-wrap").length).toBeGreaterThan(0);
 });
 
-test("revela la correlación real en la escena de apuesta", async () => {
-  render(createElement(App));
-  fireEvent.click(screen.getByRole("button", { name: /empezar/i }));
-  fireEvent.click(await screen.findByRole("button", { name: /^revelar$/i }));
-  expect(await screen.findByText(/correlación real/i)).toBeTruthy();
-  expect(screen.getByText(/la relación es/i)).toBeTruthy();
-});
-
 test("navega a la prueba y alterna observado con esperado", async () => {
   render(createElement(App));
-  fireEvent.click(screen.getByRole("button", { name: /ir a la escena 7/i }));
+  fireEvent.click(screen.getByRole("button", { name: /ir a la escena 8/i }));
   expect(
     await screen.findByRole("heading", { name: /uso y rendimiento/i }),
   ).toBeTruthy();
@@ -169,6 +172,15 @@ test("navega a la prueba y alterna observado con esperado", async () => {
   expect(await screen.findByText(/esperado = si no hubiera relación/i)).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: /^observado$/i }));
   expect(await screen.findByText(/conteos reales de la muestra/i)).toBeTruthy();
+});
+
+test("cierra con conclusión y gracias", async () => {
+  render(createElement(App));
+  fireEvent.click(screen.getByRole("button", { name: /ir a la escena 9/i }));
+  expect(
+    await screen.findByRole("heading", { name: /los datos no hablan solos/i }),
+  ).toBeTruthy();
+  expect(await screen.findByText(/^gracias\.$/i)).toBeTruthy();
 });
 
 test("cambia las pestañas del panel de datos", async () => {

@@ -25,7 +25,7 @@ export function RelationshipScene(_: SceneProps) {
 
   return (
     <SceneFrame
-      kicker="05 / EL VÍNCULO"
+      kicker="06 / EL VÍNCULO"
       title={<>Más estudio, <em>¿mejor promedio?</em></>}
       insight="La recta resume la tendencia de esta muestra. Mové las horas de estudio y mirá qué promedio estima el modelo."
     >

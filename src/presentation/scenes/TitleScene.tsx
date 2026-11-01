@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, GraduationCap, MousePointer2 } from "lucide-react";
+import { ArrowRight, GraduationCap } from "lucide-react";
 import { useSample } from "../../state/SampleContext";
 import { PointCloud } from "../visuals/PointCloud";
 import type { SceneProps } from "../SceneFrame";
@@ -20,7 +20,7 @@ export function TitleScene({ onNext }: SceneProps) {
         >
           <p className="deck-kicker">
             <GraduationCap aria-hidden="true" size={14} />
-            UNAN-León · Estadística Introductoria · 2026
+            Estadística Introductoria · 2026
           </p>
 
           <h1 className="mt-5 max-w-[12ch] font-display text-[clamp(3.35rem,8.1vw,8.6rem)] leading-[0.85] tracking-[-0.04em] text-fg">
@@ -47,7 +47,7 @@ export function TitleScene({ onNext }: SceneProps) {
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-            {sample.n} estudiantes que no existen. Una pregunta real.
+            Una exposición sobre tecnología, datos y rendimiento.
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-4">
@@ -55,10 +55,6 @@ export function TitleScene({ onNext }: SceneProps) {
               Empezar
               <ArrowRight aria-hidden="true" size={16} />
             </button>
-            <span className="deck-hint flex items-center gap-2">
-              <MousePointer2 aria-hidden="true" size={13} />
-              Flechas izquierda y derecha para navegar
-            </span>
           </div>
         </motion.div>
 

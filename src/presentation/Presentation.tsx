@@ -14,7 +14,8 @@ import { useSample } from "../state/SampleContext";
 import { SCENE_NOTES } from "./notes";
 import { useDeck } from "./useDeck";
 import { TitleScene } from "./scenes/TitleScene";
-import { GuessScene } from "./scenes/GuessScene";
+import { IntroductionScene } from "./scenes/IntroductionScene";
+import { QuestionScene } from "./scenes/QuestionScene";
 import { SampleScene } from "./scenes/SampleScene";
 import { DistributionScene } from "./scenes/DistributionScene";
 import { RelationshipScene } from "./scenes/RelationshipScene";
@@ -25,9 +26,10 @@ import { DataPanel } from "./DataPanel";
 import type { SceneProps } from "./SceneFrame";
 import "./deck.css";
 
-const SCENES: Array<ComponentType<SceneProps> | null> = [
+const SCENES: ComponentType<SceneProps>[] = [
   TitleScene,
-  GuessScene,
+  IntroductionScene,
+  QuestionScene,
   SampleScene,
   DistributionScene,
   RelationshipScene,
@@ -35,26 +37,6 @@ const SCENES: Array<ComponentType<SceneProps> | null> = [
   IndependenceScene,
   ClosingScene,
 ];
-
-function PlaceholderScene({ index }: { index: number }) {
-  const { sample } = useSample();
-  const note = SCENE_NOTES[index];
-
-  return (
-    <div className="deck-scene">
-      <p className="deck-kicker">
-        <span>0{index + 1}</span>
-        <span aria-hidden="true">/</span>
-        <span>{note?.title ?? "Escena"}</span>
-      </p>
-      <h1 className="deck-title deck-title-xl">La presentación se está armando</h1>
-      <p className="deck-insight">
-        {sample.n} registros sintéticos. Semilla {sample.seed}. Esta escena se reemplaza en el
-        siguiente commit.
-      </p>
-    </div>
-  );
-}
 
 export function Presentation() {
   const { sample, regenerate } = useSample();
@@ -65,7 +47,7 @@ export function Presentation() {
   const [dataOpen, setDataOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const currentNote = SCENE_NOTES[index];
-  const ActiveScene = SCENES[index];
+  const ActiveScene = SCENES[index] ?? SCENES[0]!;
 
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) {
@@ -184,7 +166,7 @@ export function Presentation() {
           <span className="deck-masthead-mark" aria-hidden="true">Σ</span>
           <div className="min-w-0">
             <p className="deck-masthead-title">Estadística Uno</p>
-            <p className="deck-masthead-meta">Tecnología y rendimiento · Vol. 1 · 2026</p>
+            <p className="deck-masthead-meta">UNAN-León · 2026</p>
           </div>
         </div>
 
@@ -277,18 +259,14 @@ export function Presentation() {
             transition={{ duration: reduced ? 0 : 0.52, ease: [0.22, 1, 0.36, 1] }}
             className="flex min-h-0 flex-1"
           >
-            {ActiveScene ? (
-              <ActiveScene
-                onNext={next}
-                onRestart={() => goTo(0)}
-                onOpenData={() => {
-                  setNotesOpen(false);
-                  setDataOpen(true);
-                }}
-              />
-            ) : (
-              <PlaceholderScene index={index} />
-            )}
+            <ActiveScene
+              onNext={next}
+              onRestart={() => goTo(0)}
+              onOpenData={() => {
+                setNotesOpen(false);
+                setDataOpen(true);
+              }}
+            />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -318,9 +296,6 @@ export function Presentation() {
           </button>
         </div>
 
-        <span className="deck-hint ml-4 hidden xl:block">
-          UNAN-León · Ingeniería en Sistemas
-        </span>
         <p className="deck-hint ml-auto hidden sm:block">
           Flechas para navegar · D datos · N notas · F pantalla completa
         </p>
@@ -364,8 +339,7 @@ export function Presentation() {
             </div>
             <p className="mt-6 border-t border-border pt-3 text-[0.66rem] leading-relaxed text-faint">
               Muestra fija de {sample.n} registros · semilla{" "}
-              <span className="font-mono text-muted">{sample.seed}</span>. Las notas solo las ves
-              vos.
+              <span className="font-mono text-muted">{sample.seed}</span>.
             </p>
           </motion.aside>
         ) : null}

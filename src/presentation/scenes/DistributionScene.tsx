@@ -40,7 +40,7 @@ export function DistributionScene(_: SceneProps) {
 
   return (
     <SceneFrame
-      kicker="04 / LA FORMA"
+      kicker="05 / LA FORMA"
       title={<>No todos usan la tecnología <em>igual</em>.</>}
       insight="Cambiá la variable y mirá cómo se mueve la forma. La media y la mediana cuentan historias distintas."
     >

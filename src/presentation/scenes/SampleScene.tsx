@@ -9,9 +9,9 @@ export function SampleScene(_: { onNext: () => void }) {
 
   return (
     <SceneFrame
-      kicker="03 / LA MUESTRA"
+      kicker="04 / LA MUESTRA"
       title={<>{sample.n} estudiantes que <em>no existen</em>.</>}
-      insight="Datos sintéticos para practicar. La semilla permite reproducir la muestra y todo lo que sigue se recalcula."
+      insight="La semilla permite reproducir la muestra. Al generar otra, todo lo que sigue se recalcula."
       footer={
         <div className="flex flex-wrap items-center gap-4">
           <button
@@ -40,11 +40,6 @@ export function SampleScene(_: { onNext: () => void }) {
             No son personas reales. Son 13 variables generadas con ruido para que la estadística
             tenga algo que contar.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <span className="deck-chip">13 variables</span>
-            <span className="deck-chip">Muestra fija</span>
-            <span className="deck-chip">CSV disponible</span>
-          </div>
         </div>
 
         <div className="deck-panel p-4 sm:p-5">
@@ -54,8 +49,7 @@ export function SampleScene(_: { onNext: () => void }) {
           </div>
           <SampleTable rows={sample.rows} seed={sample.seed} />
           <p className="mt-3 border-t border-border pt-3 text-[0.66rem] leading-relaxed text-faint">
-            Datos sintéticos con fines educativos. Al generar otra muestra, esta tabla y todas las
-            escenas cambian.
+            Al generar otra muestra, esta tabla y todas las escenas cambian.
           </p>
         </div>
       </div>

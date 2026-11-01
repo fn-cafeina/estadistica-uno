@@ -29,7 +29,7 @@ export function IndependenceScene(_: SceneProps) {
 
   if (!result) {
     return (
-      <SceneFrame kicker="07 / LA PRUEBA" title="La prueba no se pudo calcular.">
+      <SceneFrame kicker="08 / LA PRUEBA" title="La prueba no se pudo calcular.">
         <p className="deck-insight">Faltan categorías o datos suficientes.</p>
       </SceneFrame>
     );
@@ -39,7 +39,7 @@ export function IndependenceScene(_: SceneProps) {
 
   return (
     <SceneFrame
-      kicker="07 / LA PRUEBA"
+      kicker="08 / LA PRUEBA"
       title={<>¿Uso y rendimiento <em>van juntos</em>?</>}
       insight="La tabla muestra lo observado. El botón cambia a lo que veríamos si no hubiera relación."
       footer={
@@ -120,8 +120,7 @@ export function IndependenceScene(_: SceneProps) {
           </div>
           <ContingencyGrid result={result} showExpected={showExpected} />
           <p className="mt-3 border-t border-border pt-3 text-[0.66rem] leading-relaxed text-faint">
-            Los niveles de rendimiento son una categorización didáctica del promedio. La prueba
-            detecta asociación, no dirección ni causalidad.
+            Nivel de rendimiento: categorización didáctica del promedio.
           </p>
         </div>
       </div>

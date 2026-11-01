@@ -10,16 +10,16 @@ import { SceneFrame, type SceneProps } from "../SceneFrame";
 
 const IDEAS = [
   {
-    title: "Esta muestra no es la universidad",
-    text: "80 registros sintéticos describen un ejercicio. No representan a los estudiantes reales.",
+    title: "La muestra describe, no representa",
+    text: "Los resultados valen para este ejercicio, no para toda la universidad.",
+  },
+  {
+    title: "La relación no es determinante",
+    text: "La recta orienta, pero no explica el promedio de cada estudiante.",
   },
   {
     title: "Asociación no es causalidad",
-    text: "Una recta o una tabla muestran que dos cosas se mueven juntas, no que una cause la otra.",
-  },
-  {
-    title: "El contexto decide",
-    text: "Un punto atípico, un supuesto roto o un grupo pequeño pueden cambiar la conclusión.",
+    text: "Dos variables pueden moverse juntas sin que una cause a la otra.",
   },
 ];
 
@@ -51,9 +51,9 @@ export function ClosingScene({ onRestart, onOpenData }: SceneProps) {
 
   return (
     <SceneFrame
-      kicker="08 / CIERRE"
+      kicker="09 / CONCLUSIÓN"
       title={<>Los datos <em>no hablan solos</em>.</>}
-      insight="Tres ideas para llevarse. El resto es contexto, supuestos y decisiones."
+      insight="Tres conclusiones de esta muestra. El resto es contexto, supuestos y decisiones."
       footer={
         <div className="flex flex-wrap items-center gap-3">
           <button type="button" className="deck-control deck-control-primary" onClick={onRestart}>
@@ -66,7 +66,7 @@ export function ClosingScene({ onRestart, onOpenData }: SceneProps) {
               Ver datos
             </button>
           ) : null}
-          <span className="text-[0.68rem] text-faint">Datos sintéticos con fines educativos.</span>
+          <span className="ml-auto font-display text-2xl text-fg">Gracias.</span>
         </div>
       }
     >

@@ -77,7 +77,7 @@ export function DataPanel({ onClose }: { onClose: () => void }) {
             <p className="deck-kicker">Detrás de los datos</p>
             <h2 className="mt-2 font-display text-2xl text-fg">La muestra</h2>
             <p className="mt-1 text-xs leading-relaxed text-muted">
-              {sample.n} registros sintéticos. Semilla {sample.seed}. Útil para preguntas del público.
+              {sample.n} registros sintéticos. Semilla {sample.seed}.
             </p>
           </div>
           <button
@@ -232,10 +232,6 @@ export function DataPanel({ onClose }: { onClose: () => void }) {
             </div>
           ) : null}
         </div>
-
-        <p className="mt-5 border-t border-border pt-3 text-[0.66rem] leading-relaxed text-faint">
-          Atajos: D abre y cierra este panel. N muestra el guion. F alterna pantalla completa.
-        </p>
       </motion.aside>
     </>
   );
