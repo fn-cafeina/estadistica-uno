@@ -69,14 +69,3 @@ export type SampleSize = (typeof SAMPLE_SIZES)[number];
 export const DEFAULT_SAMPLE_SIZE: SampleSize = 80;
 export const DEFAULT_SEED = 20260214;
 
-export const THEMES = ["mocha", "rose-pine", "github", "ayu"] as const;
-export type ThemeId = (typeof THEMES)[number];
-export const DEFAULT_THEME: ThemeId = "mocha";
-
-export interface Filters {
-  major: Major | "all";
-  sex: Sex | "all";
-  year: AcademicYear | "all";
-}
-
-export const EMPTY_FILTERS: Filters = { major: "all", sex: "all", year: "all" };

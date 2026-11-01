@@ -10,11 +10,9 @@
     "check": "bun run typecheck && bun test && bun run build"
   },
   "dependencies": {
-    "chart.js": "^4.6.1",
     "lucide-react": "^1.66.0",
     "motion": "^14.9.0",
     "react": "^19.3.1",
-    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
