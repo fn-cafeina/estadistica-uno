@@ -1,7 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { Download, Printer, RefreshCw } from "lucide-react";
 import { useLab } from "./LabContext";
-import { NAV_ITEMS } from "./navigation";
+import { NAV_ITEMS, procedureLabel } from "./navigation";
 import { useActiveSection } from "./useActiveSection";
 import { Overview } from "./sections/Overview";
 import { Questionnaire } from "./sections/Questionnaire";
@@ -15,27 +15,29 @@ import { IconButton, ViewNav } from "./components";
 import "./lab.css";
 
 // Todas las vistas quedan montadas: conservan su estado local y la impresión
-// sigue sacando el informe completo.
-const VIEWS: ReadonlyArray<readonly [string, ReactNode]> = [
-  ["inicio", <Overview />],
-  ["cuestionario", <Questionnaire />],
-  ["base-datos", <DatabaseSection />],
-  ["frecuencias", <Frequencies />],
-  ["descriptiva", <Descriptive />],
-  ["pruebas", <Tests />],
-  ["graficos", <Charts />],
-  ["interpretacion", <InterpretationSection />],
+// sigue sacando el informe completo. Las secciones con varios procedimientos
+// reciben cuál deben mostrar.
+const VIEWS: ReadonlyArray<readonly [string, (procedure: string | null) => ReactNode]> = [
+  ["inicio", () => <Overview />],
+  ["cuestionario", () => <Questionnaire />],
+  ["base-datos", () => <DatabaseSection />],
+  ["frecuencias", () => <Frequencies />],
+  ["descriptiva", () => <Descriptive />],
+  ["pruebas", (procedure) => <Tests procedure={procedure} />],
+  ["graficos", (procedure) => <Charts procedure={procedure} />],
+  ["interpretacion", () => <InterpretationSection />],
 ];
 
 export function Lab() {
   const { sample, filteredRows, regenerate, exportCsv } = useLab();
-  const active = useActiveSection();
-  const activeIndex = Math.max(0, NAV_ITEMS.findIndex((item) => item.id === active));
+  const { section, procedure } = useActiveSection();
+  const activeIndex = Math.max(0, NAV_ITEMS.findIndex((item) => item.id === section));
   const activeItem = NAV_ITEMS[activeIndex];
+  const procedureTitle = procedureLabel(section, procedure);
 
   useEffect(() => {
     window.scrollTo?.(0, 0);
-  }, [active]);
+  }, [section]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -88,8 +90,8 @@ export function Lab() {
                 key={item.id}
                 href={`#${item.id}`}
                 className="lab-nav-link"
-                data-active={active === item.id}
-                aria-current={active === item.id ? "page" : undefined}
+                data-active={section === item.id}
+                aria-current={section === item.id ? "page" : undefined}
               >
                 <Icon aria-hidden="true" size={14} strokeWidth={1.8} className="lab-nav-icon" />
                 <span>{item.label}</span>
@@ -113,7 +115,10 @@ export function Lab() {
             <p>
               Laboratorio de estadística · {progress}
             </p>
-            <strong>{activeItem?.label ?? "Inicio"}</strong>
+            <strong>
+              {activeItem?.label ?? "Inicio"}
+              {procedureTitle ? <span className="lab-header-sub"> · {procedureTitle}</span> : null}
+            </strong>
           </div>
           <div className="lab-header-actions">
             <button type="button" className="lab-button lab-button-primary" onClick={regenerate}>
@@ -127,13 +132,13 @@ export function Lab() {
         </header>
 
         <main className="lab-content">
-          {VIEWS.map(([id, node]) => (
-            <div key={id} className="lab-view" data-active={active === id}>
-              {node}
+          {VIEWS.map(([id, view]) => (
+            <div key={id} className="lab-view" data-active={section === id}>
+              {view(procedure)}
             </div>
           ))}
 
-          <ViewNav active={active} />
+          <ViewNav active={section} />
 
           <footer className="lab-footer">
             <p>UNAN-León · Ingeniería en Sistemas · Estadística Introductoria · 2026</p>

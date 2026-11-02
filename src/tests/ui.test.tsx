@@ -111,6 +111,30 @@ test("resume la variable descriptiva en cuatro cifras y una tabla", async () => 
   }
 });
 
+test("abre un procedimiento por sub-ruta y deja los demás montados", async () => {
+  render(<App />);
+  goto("pruebas/pearson");
+  const tests = document.getElementById("pruebas")!;
+
+  const active = tests.querySelectorAll(".lab-procedure[data-active='true']");
+  expect(active.length).toBe(1);
+  expect(active[0]?.textContent).toContain("Correlación de Pearson");
+  // Los otros procedimientos siguen en el DOM para que la impresión no pierda ninguno.
+  expect(tests.querySelectorAll(".lab-procedure").length).toBe(3);
+  expect(within(tests).getByRole("link", { name: /regresión/i })).toBeTruthy();
+});
+
+test("cae al primer procedimiento si la sub-ruta no existe", async () => {
+  render(<App />);
+  goto("graficos/no-existe");
+  const charts = document.getElementById("graficos")!;
+
+  const active = charts.querySelectorAll(".lab-chart.lab-procedure[data-active='true']");
+  expect(active.length).toBe(1);
+  expect(active[0]?.textContent).toContain("Frecuencia por categoría");
+  expect(charts.querySelectorAll(".lab-chart.lab-procedure[data-active='false']").length).toBe(4);
+});
+
 test("expone hipótesis y genera la tabla de contingencia", async () => {
   render(<App />);
   goto("pruebas");

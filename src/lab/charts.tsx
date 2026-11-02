@@ -3,7 +3,7 @@ import type { DescriptiveSummary } from "../stats/descriptive";
 import type { FrequencyRow, GroupedFrequencyRow } from "../stats/frequency";
 import type { RegressionResult } from "../stats/regression";
 import { formatInterval, formatNumber, formatPercent } from "../lib/format";
-import { DataDetails } from "./components";
+import { cn, DataDetails } from "./components";
 
 const CHART_COLORS = [
   "var(--chart-1)",
@@ -18,22 +18,31 @@ export function ChartCard({
   subtitle,
   interpretation,
   table,
+  active,
   children,
 }: {
   title: string;
   subtitle?: string;
   interpretation: ReactNode;
   table?: ReactNode;
+  /** Cuando se indica, el gráfico es un procedimiento: se oculta si no está activo. */
+  active?: boolean;
   children: ReactNode;
 }) {
   return (
-    <figure className="lab-chart">
+    <figure
+      className={cn("lab-chart", active === undefined ? undefined : "lab-procedure")}
+      data-active={active}
+    >
       <figcaption>
         <p className="lab-chart-title">{title}</p>
         {subtitle ? <p className="lab-chart-subtitle">{subtitle}</p> : null}
       </figcaption>
       <div className="lab-chart-canvas">{children}</div>
-      <div className="lab-chart-caption">{interpretation}</div>
+      <div className="lab-chart-caption">
+        <p className="lab-label">¿Cómo se interpreta?</p>
+        {interpretation}
+      </div>
       {table ? <DataDetails>{table}</DataDetails> : null}
     </figure>
   );

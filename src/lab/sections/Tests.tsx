@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useLab } from "../LabContext";
 import { CHI_PAIRS, getChiPair, type ChiPairId } from "../chiPairs";
+import { firstProcedure } from "../navigation";
 import {
   QUANTITATIVE_VARIABLES,
   VARIABLE_MAP,
@@ -40,6 +41,7 @@ import {
   TableWrap,
   EmptyState,
   ResetFiltersButton,
+  ProcedureTabs,
 } from "../components";
 
 function cramersStrength(value: number | null): string {
@@ -50,7 +52,8 @@ function cramersStrength(value: number | null): string {
   return "Asociación alta";
 }
 
-export function Tests() {
+export function Tests({ procedure }: { procedure: string | null }) {
+  const active = procedure ?? firstProcedure("pruebas");
   const { filteredRows, resetFilters } = useLab();
   const [chiPairId, setChiPairId] = useState<ChiPairId>("usage");
   const [alpha, setAlpha] = useState(0.05);
@@ -138,7 +141,8 @@ export function Tests() {
         />
       ) : (
         <div className="space-y-6">
-          <Panel title="Chi-cuadrado" meta={chiPair.label}>
+          <ProcedureTabs section="pruebas" active={active} />
+          <Panel title="Chi-cuadrado" meta={chiPair.label} active={active === "chi2"}>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <SelectField
                 label="Par de variables"
@@ -305,7 +309,7 @@ export function Tests() {
             )}
           </Panel>
 
-          <Panel title="Correlación de Pearson" meta="Asociación lineal">
+          <Panel title="Correlación de Pearson" meta="Asociación lineal" active={active === "pearson"}>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_auto]">
               <SelectField
                 label="Variable X"
@@ -361,7 +365,11 @@ export function Tests() {
             )}
           </Panel>
 
-          <Panel title="Regresión lineal simple" meta="Modelo de mínimos cuadrados">
+          <Panel
+            title="Regresión lineal simple"
+            meta="Modelo de mínimos cuadrados"
+            active={active === "regresion"}
+          >
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_auto]">
               <SelectField
                 label="Variable X"

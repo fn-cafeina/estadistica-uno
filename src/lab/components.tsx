@@ -1,7 +1,7 @@
 import { useId, type ButtonHTMLAttributes, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
-import { NAV_ITEMS } from "./navigation";
+import { NAV_ITEMS, PROCEDURES } from "./navigation";
 
 export function cn(...classes: Array<string | false | null | undefined>): string {
   return classes.filter(Boolean).join(" ");
@@ -49,14 +49,20 @@ export function Panel({
   meta,
   children,
   className,
+  active,
 }: {
   title?: ReactNode;
   meta?: ReactNode;
   children: ReactNode;
   className?: string;
+  /** Cuando se indica, el panel es un procedimiento: se oculta si no está activo. */
+  active?: boolean;
 }) {
   return (
-    <div className={cn("lab-panel", className)}>
+    <div
+      className={cn("lab-panel", active === undefined ? undefined : "lab-procedure", className)}
+      data-active={active}
+    >
       {title || meta ? (
         <div className="lab-panel-head">
           {title ? <h3 className="lab-panel-title">{title}</h3> : <span />}
@@ -156,6 +162,7 @@ export function SelectField({
   hint,
   className,
   id,
+  active,
 }: {
   label: string;
   value: string;
@@ -164,11 +171,16 @@ export function SelectField({
   hint?: string;
   className?: string;
   id?: string;
+  active?: boolean;
 }) {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
   return (
-    <label className={cn("block", className)} htmlFor={fieldId}>
+    <label
+      className={cn("block", active === undefined ? undefined : "lab-procedure", className)}
+      data-active={active}
+      htmlFor={fieldId}
+    >
       <span className="lab-form-label">{label}</span>
       <select
         id={fieldId}
@@ -356,6 +368,33 @@ export function KeyValue({ label, value }: { label: string; value: ReactNode }) 
   );
 }
 
+export function ProcedureTabs({
+  section,
+  active,
+}: {
+  section: string;
+  active: string | null;
+}) {
+  const items = PROCEDURES[section];
+  if (!items || items.length === 0) return null;
+  return (
+    <nav className="lab-procedures" aria-label="Procedimientos de la sección">
+      {items.map((item) => (
+        <a
+          key={item.id}
+          href={`#${section}/${item.id}`}
+          className="lab-procedure-link"
+          aria-current={active === item.id ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+// Procedimientos inactivos: quedan montados y ocultos para conservar su estado
+// y para que la impresión siga sacando el informe completo.
 export function ViewNav({ active }: { active: string }) {
   const index = NAV_ITEMS.findIndex((item) => item.id === active);
   const prev = index > 0 ? NAV_ITEMS[index - 1] : undefined;

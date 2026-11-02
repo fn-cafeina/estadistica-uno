@@ -164,6 +164,14 @@
   gap: 0.4rem;
 }
 
+.lab-header-sub {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .lab-content {
   width: min(100%, 1180px);
   margin: 0 auto;
@@ -240,6 +248,43 @@
 
 .lab-view-nav-num {
   color: var(--faint);
+}
+
+.lab-procedures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.lab-procedure-link {
+  border-bottom: 2px solid transparent;
+  padding: var(--space-2) var(--space-3);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.lab-procedure-link:hover {
+  color: var(--text);
+}
+
+.lab-procedure-link[aria-current="page"] {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+.lab-procedure {
+  display: none;
+}
+
+.lab-procedure[data-active="true"] {
+  display: block;
 }
 
 .lab-section-head {
@@ -731,10 +776,15 @@
 .lab-chart-caption {
   margin-top: 0.6rem;
   border-top: 1px solid var(--border);
-  padding-top: 0.5rem;
+  padding-top: var(--space-2);
   color: var(--muted);
   font-size: 0.72rem;
   line-height: 1.5;
+}
+
+.lab-chart-caption .lab-label {
+  margin-bottom: var(--space-1);
+  color: var(--accent);
 }
 
 .lab-axis-label {
@@ -968,6 +1018,14 @@
   .lab-view {
     display: block !important;
     animation: none !important;
+  }
+
+  .lab-procedures {
+    display: none !important;
+  }
+
+  .lab-procedure {
+    display: block !important;
   }
 
   .lab-view .lab-section {

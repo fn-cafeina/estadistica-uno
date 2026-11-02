@@ -1,6 +1,7 @@
 import { BarChart3, Info } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLab } from "../LabContext";
+import { firstProcedure, procedureLabel } from "../navigation";
 import {
   QUALITATIVE_VARIABLES,
   QUANTITATIVE_VARIABLES,
@@ -19,11 +20,11 @@ import {
   Panel,
   SelectField,
   Badge,
-  Interpretation,
   TableWrap,
   EmptyState,
   ResetFiltersButton,
   Callout,
+  ProcedureTabs,
 } from "../components";
 import {
   ChartCard,
@@ -34,7 +35,8 @@ import {
   ComparisonChart,
 } from "../charts";
 
-export function Charts() {
+export function Charts({ procedure }: { procedure: string | null }) {
+  const active = procedure ?? firstProcedure("graficos");
   const { filteredRows, resetFilters } = useLab();
   const [barVariable, setBarVariable] = useState<QualitativeKey>("major");
   const [histVariable, setHistVariable] = useState<QuantitativeKey>("screenHours");
@@ -110,23 +112,30 @@ export function Charts() {
         />
       ) : (
         <div className="space-y-6">
-          <Panel title="Controles de los gráficos" meta="Variables y intervalos">
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <ProcedureTabs section="graficos" active={active} />
+          <Panel
+            title="Controles de los gráficos"
+            meta={procedureLabel("graficos", active) ?? undefined}
+          >
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <SelectField
                 label="Barras"
                 value={barVariable}
+                active={active === "barras"}
                 onChange={(value) => setBarVariable(value as QualitativeKey)}
                 options={QUALITATIVE_VARIABLES.map((variable) => ({ value: variable.key, label: variable.shortLabel }))}
               />
               <SelectField
                 label="Histograma"
                 value={histVariable}
+                active={active === "histograma"}
                 onChange={(value) => setHistVariable(value as QuantitativeKey)}
                 options={QUANTITATIVE_VARIABLES.map((variable) => ({ value: variable.key, label: variable.shortLabel }))}
               />
               <SelectField
                 label="Intervalos"
                 value={String(bins)}
+                active={active === "histograma"}
                 onChange={(value) => setBins(Number(value))}
                 options={Array.from({ length: 10 }, (_, index) => index + 3).map((count) => ({
                   value: String(count),
@@ -136,18 +145,21 @@ export function Charts() {
               <SelectField
                 label="Circular"
                 value={pieVariable}
+                active={active === "circular"}
                 onChange={(value) => setPieVariable(value as QualitativeKey)}
                 options={QUALITATIVE_VARIABLES.map((variable) => ({ value: variable.key, label: variable.shortLabel }))}
               />
               <SelectField
                 label="Comparación"
                 value={comparisonVariable}
+                active={active === "comparacion"}
                 onChange={(value) => setComparisonVariable(value as QualitativeKey)}
                 options={QUALITATIVE_VARIABLES.map((variable) => ({ value: variable.key, label: variable.shortLabel }))}
               />
               <SelectField
                 label="Dispersión X"
                 value={scatterX}
+                active={active === "dispersion"}
                 onChange={(value) => {
                   if (value === scatterY) setScatterY(scatterX);
                   setScatterX(value as QuantitativeKey);
@@ -157,6 +169,7 @@ export function Charts() {
               <SelectField
                 label="Dispersión Y"
                 value={scatterY}
+                active={active === "dispersion"}
                 onChange={(value) => {
                   if (value === scatterX) setScatterX(scatterY);
                   setScatterY(value as QuantitativeKey);
@@ -170,6 +183,7 @@ export function Charts() {
             <ChartCard
               title="Frecuencia por categoría"
               subtitle={barLabel}
+              active={active === "barras"}
               interpretation={
                 topBar ? (
                   <p>
@@ -213,6 +227,7 @@ export function Charts() {
             <ChartCard
               title="Histograma y polígono de frecuencias"
               subtitle={`${histLabel}${histUnit ? ` (${histUnit})` : ""} · ${bins} intervalos`}
+              active={active === "histograma"}
               interpretation={
                 topHist ? (
                   <p>
@@ -261,6 +276,7 @@ export function Charts() {
             <ChartCard
               title="Composición porcentual"
               subtitle={pieLabel}
+              active={active === "circular"}
               interpretation={
                 topPie ? (
                   <p>
@@ -304,6 +320,7 @@ export function Charts() {
             <ChartCard
               title="Promedio según categoría"
               subtitle={`${comparisonLabel} · promedio académico`}
+              active={active === "comparacion"}
               interpretation={
                 bestGroup && worstGroup ? (
                   <p>
@@ -352,6 +369,7 @@ export function Charts() {
           <ChartCard
             title="Dispersión y recta de regresión"
             subtitle={`${xVariable.label}${xVariable.unit ? ` (${xVariable.unit})` : ""} y ${yVariable.label}${yVariable.unit ? ` (${yVariable.unit})` : ""}`}
+            active={active === "dispersion"}
             interpretation={
               correlation && regression ? (
                 <p>
@@ -394,21 +412,17 @@ export function Charts() {
             />
           </ChartCard>
 
-          <div className="grid gap-3 lg:grid-cols-3">
-            <Interpretation>
-              <p>
-                Un gráfico describe la muestra visible. La forma, los valores extremos y los grupos
-                pequeños cambian la lectura. Siempre conviene mirar la tabla de respaldo.
-              </p>
-            </Interpretation>
-            <Callout title="Los ejes importan" icon={Info}>
-              Revisa las unidades y el rango de los ejes antes de comparar. Una escala distinta puede
-              hacer que la misma diferencia parezca grande o pequeña.
-            </Callout>
-            <Callout title="Asociación visual" tone="warning">
-              Una nube de puntos o una recta no prueban causalidad. Solo muestran cómo se mueven dos
-              variables en esta muestra.
-            </Callout>
+          <div className="lab-procedure" data-active={active === "dispersion"}>
+            <div className="grid gap-3 lg:grid-cols-2">
+              <Callout title="Los ejes importan" icon={Info}>
+                Revisa las unidades y el rango de los ejes antes de comparar. Una escala distinta puede
+                hacer que la misma diferencia parezca grande o pequeña.
+              </Callout>
+              <Callout title="Asociación visual" tone="warning">
+                Una nube de puntos o una recta no prueban causalidad. Solo muestran cómo se mueven dos
+                variables en esta muestra.
+              </Callout>
+            </div>
           </div>
         </div>
       )}
