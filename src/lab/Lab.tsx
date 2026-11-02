@@ -1,6 +1,6 @@
 import { Download, Printer, RefreshCw } from "lucide-react";
 import { useLab } from "./LabContext";
-import { NAV_ITEMS, GROUP_MEMBERS } from "./navigation";
+import { NAV_ITEMS } from "./navigation";
 import { useActiveSection } from "./useActiveSection";
 import { Overview } from "./sections/Overview";
 import { Questionnaire } from "./sections/Questionnaire";
@@ -59,7 +59,6 @@ export function Lab() {
           <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-[0.08em]">
             {filteredRows.length} de {sample.n} registros · semilla {sample.seed}
           </p>
-          <p className="mt-2 text-[0.68rem] leading-relaxed">Datos sintéticos con fines educativos.</p>
         </div>
       </aside>
 
@@ -92,10 +91,7 @@ export function Lab() {
 
           <footer className="lab-footer">
             <p>UNAN-León · Ingeniería en Sistemas · Estadística Introductoria · 2026</p>
-            <p className="mt-1">
-              Equipo: {GROUP_MEMBERS.join(" · ")}
-            </p>
-            <p className="mt-2">Datos sintéticos con fines educativos. Los resultados describen la muestra visible.</p>
+            <p className="mt-1">Los resultados describen la muestra visible.</p>
           </footer>
         </main>
       </div>
