@@ -32,7 +32,6 @@ import {
   Section,
   Panel,
   Metric,
-  Badge,
   Button,
   SelectField,
   SegmentedControl,
@@ -128,7 +127,6 @@ export function Tests({ procedure }: { procedure: string | null }) {
       id="pruebas"
       title={<>Qué se puede <em>sostener</em>.</>}
       description="Contrastes de independencia y modelos de asociación lineal. Cada resultado incluye hipótesis, supuestos, decisión y límites."
-      aside={<Badge tone="accent">α = {alpha}</Badge>}
     >
       {filteredRows.length === 0 ? (
         <EmptyState

@@ -13,7 +13,6 @@ export function Questionnaire() {
       id="cuestionario"
       title={<>El instrumento y sus <em>variables</em>.</>}
       description="Trece preguntas adaptadas al tema. Cada una tiene una variable, un tipo de medición y una codificación que permite construir la base."
-      aside={<Badge tone="accent">{QUESTIONNAIRE.length} preguntas</Badge>}
     >
       <div className="lab-grid lab-grid-sidebar">
         <Panel title="Cuestionario de referencia" meta="Ya cargado en la base">

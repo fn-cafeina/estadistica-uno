@@ -15,7 +15,6 @@ import {
   Section,
   Panel,
   SelectField,
-  Badge,
   Interpretation,
   TableWrap,
   EmptyState,
@@ -49,7 +48,6 @@ export function Frequencies() {
       id="frecuencias"
       title={<>Cómo se reparten los <em>datos</em>.</>}
       description="Frecuencias absolutas, relativas y porcentuales. Para variables ordinales y datos agrupados se agregan las frecuencias acumuladas."
-      aside={<Badge tone="accent">n = {filteredRows.length}</Badge>}
     >
       {filteredRows.length === 0 ? (
         <EmptyState

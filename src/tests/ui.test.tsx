@@ -79,8 +79,14 @@ test("filtra la base y actualiza el conteo visible", async () => {
 
 test("genera una nueva muestra y conserva el laboratorio", async () => {
   render(<App />);
+  const sampleMeta = () => document.querySelector(".lab-sidebar-footer p:last-child")?.textContent;
+
+  const before = sampleMeta();
+  expect(before).toContain("80 de 80 registros");
+
   fireEvent.click(screen.getAllByRole("button", { name: /nueva muestra/i })[0]!);
-  expect(screen.getAllByText(/muestra fija de 80/i).length).toBeGreaterThan(0);
+  expect(sampleMeta()).toContain("80 de 80 registros");
+  expect(sampleMeta()).not.toBe(before);
 });
 
 test("muestra frecuencias, descriptiva, pruebas y gráficos", async () => {

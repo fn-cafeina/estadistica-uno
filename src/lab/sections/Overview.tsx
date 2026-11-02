@@ -38,9 +38,6 @@ export function Overview() {
             resúmenes descriptivos, las pruebas de asociación y los gráficos. No es una presentación:
             es un laboratorio para explorar y estudiar los procedimientos.
           </p>
-          <div className="mt-5">
-            <Badge tone="warning">Muestra fija de 80 · semilla {sample.seed}</Badge>
-          </div>
         </div>
 
         <Panel title="Equipo" meta="UNAN-León · 2026">
