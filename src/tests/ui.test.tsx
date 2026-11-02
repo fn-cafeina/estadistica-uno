@@ -6,10 +6,20 @@ const { GlobalRegistrator } = await import("@happy-dom/global-registrator");
 GlobalRegistrator.register();
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const { cleanup, fireEvent, render, screen, waitFor, within } = await import("@testing-library/react");
+const { act, cleanup, fireEvent, render, screen, waitFor, within } = await import("@testing-library/react");
 const { App } = await import("../App");
 
-afterEach(() => cleanup());
+afterEach(() => {
+  cleanup();
+  window.location.hash = "";
+});
+
+function goto(id: string) {
+  act(() => {
+    window.location.hash = `#${id}`;
+    window.dispatchEvent(new Event("hashchange"));
+  });
+}
 afterAll(() => GlobalRegistrator.unregister());
 
 test("abre en el laboratorio con el tema y el equipo", async () => {
@@ -76,15 +86,20 @@ test("genera una nueva muestra y conserva el laboratorio", async () => {
 test("muestra frecuencias, descriptiva, pruebas y gráficos", async () => {
   render(<App />);
 
+  goto("frecuencias");
   expect(screen.getByRole("heading", { name: /cómo se reparten los datos/i })).toBeTruthy();
+  goto("descriptiva");
   expect(screen.getByRole("heading", { name: /el centro y la dispersión/i })).toBeTruthy();
+  goto("pruebas");
   expect(screen.getByRole("heading", { name: /qué se puede sostener/i })).toBeTruthy();
+  goto("graficos");
   expect(screen.getByRole("heading", { name: /mirar los datos también/i })).toBeTruthy();
   expect(screen.getAllByRole("img").length).toBeGreaterThan(0);
 });
 
 test("expone hipótesis y genera la tabla de contingencia", async () => {
   render(<App />);
+  goto("pruebas");
   const tests = document.getElementById("pruebas");
   expect(tests).toBeTruthy();
   expect(within(tests!).getAllByText(/H₀:/).length).toBeGreaterThan(0);
@@ -95,6 +110,7 @@ test("expone hipótesis y genera la tabla de contingencia", async () => {
 
 test("incluye la síntesis y el botón de impresión", async () => {
   render(<App />);
+  goto("interpretacion");
   expect(screen.getByRole("heading", { name: /lo que muestran los datos/i })).toBeTruthy();
   expect(screen.getAllByRole("button", { name: /imprimir reporte/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/lo que no se puede concluir/i).length).toBeGreaterThan(0);

@@ -1,3 +1,4 @@
+import { useEffect, type ReactNode } from "react";
 import { Download, Printer, RefreshCw } from "lucide-react";
 import { useLab } from "./LabContext";
 import { NAV_ITEMS } from "./navigation";
@@ -10,13 +11,57 @@ import { Descriptive } from "./sections/Descriptive";
 import { Tests } from "./sections/Tests";
 import { Charts } from "./sections/Charts";
 import { InterpretationSection } from "./sections/InterpretationSection";
-import { IconButton } from "./components";
+import { IconButton, ViewNav } from "./components";
 import "./lab.css";
+
+// Todas las vistas quedan montadas: conservan su estado local y la impresión
+// sigue sacando el informe completo.
+const VIEWS: ReadonlyArray<readonly [string, ReactNode]> = [
+  ["inicio", <Overview />],
+  ["cuestionario", <Questionnaire />],
+  ["base-datos", <DatabaseSection />],
+  ["frecuencias", <Frequencies />],
+  ["descriptiva", <Descriptive />],
+  ["pruebas", <Tests />],
+  ["graficos", <Charts />],
+  ["interpretacion", <InterpretationSection />],
+];
 
 export function Lab() {
   const { sample, filteredRows, regenerate, exportCsv } = useLab();
   const active = useActiveSection();
-  const activeItem = NAV_ITEMS.find((item) => item.id === active) ?? NAV_ITEMS[0];
+  const activeIndex = Math.max(0, NAV_ITEMS.findIndex((item) => item.id === active));
+  const activeItem = NAV_ITEMS[activeIndex];
+
+  useEffect(() => {
+    window.scrollTo?.(0, 0);
+  }, [active]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "SELECT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      const step = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0;
+      if (step === 0) return;
+      const next = NAV_ITEMS[activeIndex + step];
+      if (!next) return;
+      event.preventDefault();
+      window.location.hash = `#${next.id}`;
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activeIndex]);
+
+  const progress = `${String(activeIndex + 1).padStart(2, "0")} / ${String(NAV_ITEMS.length).padStart(2, "0")}`;
 
   return (
     <div className="lab-app">
@@ -65,7 +110,9 @@ export function Lab() {
       <div className="lab-main">
         <header className="lab-header">
           <div className="lab-header-title">
-            <p>Laboratorio de estadística</p>
+            <p>
+              Laboratorio de estadística · {progress}
+            </p>
             <strong>{activeItem?.label ?? "Inicio"}</strong>
           </div>
           <div className="lab-header-actions">
@@ -80,14 +127,13 @@ export function Lab() {
         </header>
 
         <main className="lab-content">
-          <Overview />
-          <Questionnaire />
-          <DatabaseSection />
-          <Frequencies />
-          <Descriptive />
-          <Tests />
-          <Charts />
-          <InterpretationSection />
+          {VIEWS.map(([id, node]) => (
+            <div key={id} className="lab-view" data-active={active === id}>
+              {node}
+            </div>
+          ))}
+
+          <ViewNav active={active} />
 
           <footer className="lab-footer">
             <p>UNAN-León · Ingeniería en Sistemas · Estadística Introductoria · 2026</p>
