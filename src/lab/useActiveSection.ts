@@ -6,8 +6,8 @@ export interface ActiveLocation {
   procedure: string | null;
 }
 
-function locationFromHash(): ActiveLocation {
-  const [rawSection = "", rawProcedure] = window.location.hash.replace(/^#/, "").split("/");
+export function parseLocation(hash: string): ActiveLocation {
+  const [rawSection = "", rawProcedure] = hash.replace(/^#/, "").split("/");
   const item = NAV_ITEMS.find((nav) => nav.id === rawSection);
   if (!item) return { section: NAV_ITEMS[0]?.id ?? "inicio", procedure: null };
 
@@ -15,6 +15,10 @@ function locationFromHash(): ActiveLocation {
   const procedure =
     rawProcedure && allowed?.some((nav) => nav.id === rawProcedure) ? rawProcedure : null;
   return { section: item.id, procedure: procedure ?? firstProcedure(item.id) };
+}
+
+function locationFromHash(): ActiveLocation {
+  return parseLocation(window.location.hash);
 }
 
 export function useActiveSection(): ActiveLocation {

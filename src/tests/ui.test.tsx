@@ -146,6 +146,26 @@ test("expone hipótesis y genera la tabla de contingencia", async () => {
   expect(within(tests!).getAllByText(/¿cómo se interpreta\?/i).length).toBeGreaterThan(0);
 });
 
+test("las flechas recorren cada procedimiento antes de cambiar de sección", async () => {
+  render(<App />);
+  goto("pruebas");
+
+  act(() => {
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+  });
+  expect(window.location.hash).toBe("#pruebas/pearson");
+
+  act(() => {
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+  });
+  expect(window.location.hash).toBe("#pruebas/regresion");
+
+  act(() => {
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+  });
+  expect(window.location.hash).toBe("#graficos/barras");
+});
+
 test("abre los detalles plegados al imprimir", async () => {
   render(<App />);
   const details = document.querySelector(".lab-details") as HTMLDetailsElement;

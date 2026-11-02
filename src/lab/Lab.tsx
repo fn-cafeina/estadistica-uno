@@ -1,8 +1,8 @@
 import { useEffect, type ReactNode } from "react";
 import { Download, Printer, RefreshCw } from "lucide-react";
 import { useLab } from "./LabContext";
-import { NAV_ITEMS, procedureLabel } from "./navigation";
-import { useActiveSection } from "./useActiveSection";
+import { NAV_ITEMS, PROCEDURES, procedureLabel } from "./navigation";
+import { useActiveSection, parseLocation } from "./useActiveSection";
 import { Overview } from "./sections/Overview";
 import { Questionnaire } from "./sections/Questionnaire";
 import { DatabaseSection } from "./sections/Database";
@@ -27,6 +27,22 @@ const VIEWS: ReadonlyArray<readonly [string, (procedure: string | null) => React
   ["graficos", (procedure) => <Charts procedure={procedure} />],
   ["interpretacion", () => <InterpretationSection />],
 ];
+
+// Las flechas del teclado recorren las paradas reales: cada procedimiento es
+// una parada, igual que cada sección.
+const STOPS = NAV_ITEMS.flatMap((item) => {
+  const procedures = PROCEDURES[item.id];
+  return procedures && procedures.length > 0
+    ? procedures.map((procedure) => `${item.id}/${procedure.id}`)
+    : [item.id];
+});
+
+function stopIndex(section: string, procedure: string | null): number {
+  const key = procedure ? `${section}/${procedure}` : section;
+  const exact = STOPS.indexOf(key);
+  if (exact >= 0) return exact;
+  return Math.max(0, STOPS.findIndex((stop) => stop.startsWith(`${section}/`)));
+}
 
 export function Lab() {
   const { sample, filteredRows, regenerate, exportCsv } = useLab();
@@ -78,14 +94,16 @@ export function Lab() {
       }
       const step = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0;
       if (step === 0) return;
-      const next = NAV_ITEMS[activeIndex + step];
+      // Se lee el hash y no el estado: dos pulsaciones seguidas no repiten parada.
+      const here = parseLocation(window.location.hash);
+      const next = STOPS[stopIndex(here.section, here.procedure) + step];
       if (!next) return;
       event.preventDefault();
-      window.location.hash = `#${next.id}`;
+      window.location.hash = `#${next}`;
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex]);
+  }, []);
 
   const progress = `${String(activeIndex + 1).padStart(2, "0")} / ${String(NAV_ITEMS.length).padStart(2, "0")}`;
 
