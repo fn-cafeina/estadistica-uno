@@ -1028,6 +1028,11 @@
     display: block !important;
   }
 
+  /* Los controles de un procedimiento no forman parte del informe impreso. */
+  .lab-procedure-control {
+    display: none !important;
+  }
+
   .lab-view .lab-section {
     border-top: 1px solid #d1d5db;
   }

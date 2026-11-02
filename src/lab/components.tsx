@@ -177,7 +177,11 @@ export function SelectField({
   const fieldId = id ?? generatedId;
   return (
     <label
-      className={cn("block", active === undefined ? undefined : "lab-procedure", className)}
+      className={cn(
+        "block",
+        active === undefined ? undefined : "lab-procedure lab-procedure-control",
+        className,
+      )}
       data-active={active}
       htmlFor={fieldId}
     >
