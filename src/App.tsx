@@ -1,10 +1,10 @@
-import { SampleProvider } from "./state/SampleContext";
-import { Presentation } from "./presentation/Presentation";
+import { LabProvider } from "./lab/LabContext";
+import { Lab } from "./lab/Lab";
 
 export function App() {
   return (
-    <SampleProvider>
-      <Presentation />
-    </SampleProvider>
+    <LabProvider>
+      <Lab />
+    </LabProvider>
   );
 }

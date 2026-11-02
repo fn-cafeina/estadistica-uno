@@ -1,0 +1,104 @@
+import { Download, Printer, RefreshCw } from "lucide-react";
+import { useLab } from "./LabContext";
+import { NAV_ITEMS, GROUP_MEMBERS } from "./navigation";
+import { useActiveSection } from "./useActiveSection";
+import { Overview } from "./sections/Overview";
+import { Questionnaire } from "./sections/Questionnaire";
+import { DatabaseSection } from "./sections/Database";
+import { Frequencies } from "./sections/Frequencies";
+import { Descriptive } from "./sections/Descriptive";
+import { Tests } from "./sections/Tests";
+import { Charts } from "./sections/Charts";
+import { InterpretationSection } from "./sections/InterpretationSection";
+import { IconButton } from "./components";
+import "./lab.css";
+
+export function Lab() {
+  const { sample, filteredRows, regenerate, exportCsv } = useLab();
+  const active = useActiveSection();
+  const activeItem = NAV_ITEMS.find((item) => item.id === active) ?? NAV_ITEMS[0];
+
+  return (
+    <div className="lab-app">
+      <a className="lab-skip-link" href="#inicio">
+        Saltar al contenido
+      </a>
+
+      <aside className="lab-sidebar">
+        <div className="lab-brand">
+          <span className="lab-brand-mark" aria-hidden="true">
+            Σ
+          </span>
+          <div>
+            <p className="lab-brand-title">Estadística Uno</p>
+            <p className="lab-brand-meta">UNAN-León · 2026</p>
+          </div>
+        </div>
+
+        <nav className="lab-nav" aria-label="Secciones del laboratorio">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className="lab-nav-link"
+                data-active={active === item.id}
+                aria-current={active === item.id ? "page" : undefined}
+              >
+                <Icon aria-hidden="true" size={14} strokeWidth={1.8} className="lab-nav-icon" />
+                <span>{item.label}</span>
+              </a>
+            );
+          })}
+        </nav>
+
+        <div className="lab-sidebar-footer">
+          <strong>Laboratorio de estadística</strong>
+          <p className="mt-1">Tecnología y rendimiento académico universitario.</p>
+          <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-[0.08em]">
+            {filteredRows.length} de {sample.n} registros · semilla {sample.seed}
+          </p>
+          <p className="mt-2 text-[0.68rem] leading-relaxed">Datos sintéticos con fines educativos.</p>
+        </div>
+      </aside>
+
+      <div className="lab-main">
+        <header className="lab-header">
+          <div className="lab-header-title">
+            <p>Laboratorio de estadística</p>
+            <strong>{activeItem?.label ?? "Inicio"}</strong>
+          </div>
+          <div className="lab-header-actions">
+            <button type="button" className="lab-button lab-button-primary" onClick={regenerate}>
+              <RefreshCw aria-hidden="true" size={13} />
+              <span className="hidden sm:inline">Nueva muestra</span>
+              <span className="sm:hidden">Nueva</span>
+            </button>
+            <IconButton icon={Download} label="Descargar CSV" onClick={exportCsv} />
+            <IconButton icon={Printer} label="Imprimir reporte" onClick={() => window.print()} />
+          </div>
+        </header>
+
+        <main className="lab-content">
+          <Overview />
+          <Questionnaire />
+          <DatabaseSection />
+          <Frequencies />
+          <Descriptive />
+          <Tests />
+          <Charts />
+          <InterpretationSection />
+
+          <footer className="lab-footer">
+            <p>UNAN-León · Ingeniería en Sistemas · Estadística Introductoria · 2026</p>
+            <p className="mt-1">
+              Equipo: {GROUP_MEMBERS.join(" · ")}
+            </p>
+            <p className="mt-2">Datos sintéticos con fines educativos. Los resultados describen la muestra visible.</p>
+          </footer>
+        </main>
+      </div>
+    </div>
+  );
+}
