@@ -30,7 +30,6 @@ import {
   Section,
   Panel,
   Metric,
-  Badge,
   Button,
   Interpretation,
   Callout,
