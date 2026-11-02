@@ -35,7 +35,6 @@ import {
   ResetFiltersButton,
   SelectField,
   TableWrap,
-  Callout,
 } from "../components";
 
 type SortKey = "id" | VariableKey;
@@ -210,7 +209,7 @@ export function DatabaseSection() {
               </Button>
             </div>
             <p className="font-mono text-label uppercase tracking-[0.06em] text-faint">
-              Semilla {sample.seed} · {formatDate(sample.generatedAt)}
+              Semilla {sample.seed} · {formatDate(sample.generatedAt)} · datos sintéticos
             </p>
           </div>
 
@@ -412,13 +411,6 @@ export function DatabaseSection() {
           </div>
         </div>
       </Panel>
-
-      <div className="mt-4">
-        <Callout title="Datos sintéticos con fines educativos">
-          La base no proviene de estudiantes reales. Se genera con una semilla reproducible para
-          practicar estadística y no debe usarse para afirmar nada sobre la población universitaria.
-        </Callout>
-      </div>
 
       <div className="lab-print-only mt-5">
         <h3 className="lab-panel-title mb-3">Base completa filtrada</h3>

@@ -1,7 +1,6 @@
 import {
   AlertTriangle,
   BookOpen,
-  CheckCircle2,
   Info,
   Printer,
   ShieldCheck,
@@ -183,17 +182,11 @@ export function InterpretationSection() {
             </div>
           </div>
 
-          <div className="lab-grid lab-grid-2">
-            <Callout title="Cómo leer los resultados" icon={Info}>
-              Empieza por la pregunta y por la muestra. Luego revisa el tamaño del efecto, no solo el
-              valor p. Un resultado estadísticamente significativo puede no ser relevante en la
-              práctica, y uno no significativo no demuestra que no exista relación.
-            </Callout>
-            <Callout title="Datos sintéticos" tone="success" icon={CheckCircle2}>
-              La base se generó para practicar. La semilla permite reproducirla y regenerarla. No
-              uses estos resultados para afirmar algo sobre la población de la UNAN-León.
-            </Callout>
-          </div>
+          <Callout title="Cómo leer los resultados" icon={Info}>
+            Empieza por la pregunta y por la muestra. Luego revisa el tamaño del efecto, no solo el
+            valor p. Un resultado estadísticamente significativo puede no ser relevante en la
+            práctica, y uno no significativo no demuestra que no exista relación.
+          </Callout>
 
           <details className="lab-details">
             <summary>Glosario breve</summary>

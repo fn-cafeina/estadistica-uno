@@ -31,6 +31,33 @@ function modeText(key: QuantitativeKey, values: readonly number[], summary: Desc
   return top ? `${formatInterval(top.lower, top.upper)} (${top.count})` : "No calculable";
 }
 
+// El resumen de la variable seleccionada no cabe como cifras destacadas: doce
+// valores más en tarjetas grandes tapan los cuatro que importan.
+function additionalStats(
+  continuous: boolean,
+  mode: string,
+  summary: DescriptiveSummary,
+): Array<[string, string, string]> {
+  return [
+    [
+      continuous ? "Clase modal" : "Moda",
+      mode,
+      continuous ? "Intervalo con más casos" : "Valor más frecuente",
+    ],
+    ["Mínimo", formatNumber(summary.min, 1), "Valor menor observado"],
+    ["Máximo", formatNumber(summary.max, 1), "Valor mayor observado"],
+    ["Rango", formatNumber(summary.range, 1), "Máximo menos mínimo"],
+    ["Varianza", formatNumber(summary.variance, 2), "Desviación al cuadrado (muestral)"],
+    ["Q1", formatNumber(summary.q1, 1), "25% de los datos por debajo"],
+    ["Q3", formatNumber(summary.q3, 1), "75% de los datos por debajo"],
+    ["IQR", formatNumber(summary.iqr, 1), "Q3 menos Q1"],
+    ["P10", formatNumber(summary.p10, 1), "Percentil 10"],
+    ["P90", formatNumber(summary.p90, 1), "Percentil 90"],
+    ["CV", summary.cv === null ? "s/d" : formatPercent(summary.cv), "Desviación estándar / media"],
+    ["Atípicos", String(summary.outlierCount), "Fuera de 1.5 × IQR"],
+  ];
+}
+
 export function Descriptive() {
   const { filteredRows, resetFilters } = useLab();
   const [selectedKey, setSelectedKey] = useState<QuantitativeKey>("gpa");
@@ -97,24 +124,34 @@ export function Descriptive() {
             <Metric label="n válido" value={summary.n} hint="Datos finitos" accent />
             <Metric label="Media" value={formatNumber(summary.mean, 1)} hint={variable.unit ?? "Promedio aritmético"} />
             <Metric label="Mediana" value={formatNumber(summary.median, 1)} hint="Percentil 50" />
-            <Metric
-              label={variable.type === "continuous" ? "Clase modal" : "Moda"}
-              value={variable.type === "continuous" ? "Clase modal" : mode}
-              hint={variable.type === "continuous" ? mode : "Valor más frecuente"}
-            />
-            <Metric label="Mínimo" value={formatNumber(summary.min, 1)} hint="Valor menor" />
-            <Metric label="Máximo" value={formatNumber(summary.max, 1)} hint="Valor mayor" />
-            <Metric label="Rango" value={formatNumber(summary.range, 1)} hint="Máximo menos mínimo" />
             <Metric label="Desv. estándar" value={formatNumber(summary.stdDev, 2)} hint="Dispersión muestral" />
-            <Metric label="Varianza" value={formatNumber(summary.variance, 2)} hint="Desviación al cuadrado" />
-            <Metric label="Q1" value={formatNumber(summary.q1, 1)} hint="25% debajo" />
-            <Metric label="Q3" value={formatNumber(summary.q3, 1)} hint="75% debajo" />
-            <Metric label="IQR" value={formatNumber(summary.iqr, 1)} hint="Q3 menos Q1" />
-            <Metric label="P10" value={formatNumber(summary.p10, 1)} hint="Percentil 10" />
-            <Metric label="P90" value={formatNumber(summary.p90, 1)} hint="Percentil 90" />
-            <Metric label="CV" value={summary.cv === null ? "s/d" : formatPercent(summary.cv)} hint="Desviación / media" />
-            <Metric label="Atípicos" value={summary.outlierCount} hint="Regla 1.5 IQR" />
           </div>
+
+          <Panel title="Estadísticos adicionales" meta={variable.unit ? `Unidad: ${variable.unit}` : undefined}>
+            <TableWrap>
+              <table className="lab-table min-w-[30rem]">
+                <caption className="sr-only">
+                  Estadísticos adicionales de {variable.label}
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Estadístico</th>
+                    <th scope="col" className="num">Valor</th>
+                    <th scope="col">Lectura</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {additionalStats(variable.type === "continuous", mode, summary).map(([label, value, note]) => (
+                    <tr key={label}>
+                      <td className="font-medium text-fg">{label}</td>
+                      <td className="num">{value}</td>
+                      <td className="text-muted">{note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </TableWrap>
+          </Panel>
 
           <Panel title="Resumen de variables cuantitativas" meta={`${QUANTITATIVE_VARIABLES.length} variables`}>
             <TableWrap className="max-h-[26rem] overflow-auto" hint="Desliza para ver todas las columnas.">

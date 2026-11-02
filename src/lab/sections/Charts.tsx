@@ -358,7 +358,6 @@ export function Charts() {
                   En la muestra visible, r = <strong className="text-fg">{formatNumber(correlation.r, 2)}</strong>{" "}
                   ({correlation.strength}, {correlation.direction}). La recta estimada es{" "}
                   <code className="text-fg">{formatEquation(regression.slope, regression.intercept, xVariable.shortLabel, yVariable.shortLabel)}</code>.
-                  La relación es lineal y descriptiva; no demuestra causalidad.
                 </p>
               ) : null
             }

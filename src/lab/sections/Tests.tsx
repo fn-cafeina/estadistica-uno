@@ -290,8 +290,7 @@ export function Tests() {
                       χ² mide cuánto se alejan las frecuencias observadas de las esperadas si las
                       variables fueran independientes. Un estadístico grande y un valor p pequeño
                       sugieren asociación. Los grados de libertad dependen del número de filas y
-                      columnas. No se puede concluir causalidad: solo que esta muestra se aparta de la
-                      independencia.
+                      columnas.
                     </p>
                   </Interpretation>
                 </div>
@@ -490,11 +489,6 @@ export function Tests() {
             )}
           </Panel>
 
-          <Callout title="Límite común" tone="warning" icon={Info}>
-            Los resultados describen una muestra sintética. No prueban causalidad, no estiman el efecto
-            de una intervención y no se generalizan a estudiantes reales. La significación estadística
-            tampoco garantiza relevancia práctica.
-          </Callout>
         </div>
       )}
     </Section>

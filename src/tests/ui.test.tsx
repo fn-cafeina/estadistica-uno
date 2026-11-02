@@ -97,6 +97,20 @@ test("muestra frecuencias, descriptiva, pruebas y gráficos", async () => {
   expect(screen.getAllByRole("img").length).toBeGreaterThan(0);
 });
 
+test("resume la variable descriptiva en cuatro cifras y una tabla", async () => {
+  render(<App />);
+  goto("descriptiva");
+  const descriptive = document.getElementById("descriptiva");
+  expect(descriptive).toBeTruthy();
+  expect(descriptive!.querySelectorAll(".lab-metric").length).toBe(4);
+
+  const extra = within(descriptive!).getByRole("table", { name: /estadísticos adicionales/i });
+  expect(within(extra).getAllByRole("row").length).toBe(13);
+  for (const label of ["Clase modal", "Rango", "Varianza", "P90", "Atípicos"]) {
+    expect(within(extra).getByText(label)).toBeTruthy();
+  }
+});
+
 test("expone hipótesis y genera la tabla de contingencia", async () => {
   render(<App />);
   goto("pruebas");
