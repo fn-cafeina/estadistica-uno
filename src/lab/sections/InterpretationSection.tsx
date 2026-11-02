@@ -1,18 +1,7 @@
-import {
-  AlertTriangle,
-  BookOpen,
-  Info,
-  Printer,
-  ShieldCheck,
-} from "lucide-react";
+import { AlertTriangle, BookOpen, Info, Printer } from "lucide-react";
 import { useLab } from "../LabContext";
 import { getChiPair } from "../chiPairs";
-import {
-  VARIABLE_MAP,
-  getCategories,
-  getCategoricalValue,
-  getVariableLabel,
-} from "../../data/schema";
+import { getCategories, getCategoricalValue, getVariableLabel } from "../../data/schema";
 import { chiSquareTest } from "../../stats/chiSquare";
 import { mean } from "../../stats/descriptive";
 import { pearsonCorrelation } from "../../stats/correlation";
@@ -23,19 +12,16 @@ import {
   formatNumber,
   formatPValue,
   formatPercent,
-  pDecision,
   pDecisionText,
 } from "../../lib/format";
 import {
   Section,
   Panel,
-  Metric,
   Button,
   Interpretation,
   Callout,
   EmptyState,
   ResetFiltersButton,
-  KeyValue,
 } from "../components";
 
 const GLOSSARY = [
@@ -50,7 +36,7 @@ const GLOSSARY = [
 ];
 
 export function InterpretationSection() {
-  const { filteredRows, resetFilters, sample, filters } = useLab();
+  const { filteredRows, resetFilters, filters } = useLab();
   const gpaValues = filteredRows.map((row) => row.gpa);
   const screenValues = filteredRows.map((row) => row.screenHours);
   const averageGpa = mean(gpaValues);
@@ -97,7 +83,7 @@ export function InterpretationSection() {
   }
   if (filters.major !== "all" || filters.sex !== "all" || filters.year !== "all") {
     findings.push(
-      "Los filtros globales están activos. Todos los resultados describen únicamente las filas visibles, no la muestra completa.",
+      "Los filtros globales están activos: los hallazgos describen únicamente las filas visibles.",
     );
   }
 
@@ -121,15 +107,6 @@ export function InterpretationSection() {
         />
       ) : (
         <div className="space-y-6">
-          <div className="lab-metrics lab-metrics-3">
-            <Metric label="Registros" value={filteredRows.length} hint={`Semilla ${sample.seed}`} accent />
-            <Metric label="Promedio medio" value={formatNumber(averageGpa, 1)} hint="Puntos" />
-            <Metric label="Pantalla media" value={`${formatNumber(averageScreen, 1)} h`} hint="Por día" />
-            <Metric label="r estudio-promedio" value={correlation ? formatNumber(correlation.r, 2) : "s/d"} hint={correlation ? correlation.strength : "No calculable"} />
-            <Metric label="R²" value={regression ? formatNumber(regression.r2, 2) : "s/d"} hint="Variabilidad explicada" />
-            <Metric label="Chi-cuadrado p" value={chiResult ? formatPValue(chiResult.pValue) : "s/d"} hint="α = 0.05" />
-          </div>
-
           <div className="lab-grid lab-grid-sidebar">
             <Panel title="Hallazgos de la muestra visible" meta={`n = ${filteredRows.length}`}>
               <ol className="space-y-3">
@@ -152,31 +129,15 @@ export function InterpretationSection() {
               </div>
             </Panel>
 
-            <div className="space-y-6">
-              <Panel title="Ficha de resultados" meta="Resumen">
-                <dl>
-                  <KeyValue label="n visible" value={filteredRows.length} />
-                  <KeyValue label="Media del promedio" value={`${formatNumber(averageGpa, 1)} puntos`} />
-                  <KeyValue label="r estudio-promedio" value={correlation ? formatNumber(correlation.r, 3) : "s/d"} />
-                  <KeyValue label="R² de la regresión" value={regression ? formatNumber(regression.r2, 3) : "s/d"} />
-                  <KeyValue label="Chi-cuadrado" value={chiResult ? formatNumber(chiResult.statistic, 2) : "s/d"} />
-                  <KeyValue
-                    label="Decisión chi-cuadrado"
-                    value={chiResult ? pDecision(chiResult.pValue, 0.05) : "s/d"}
-                  />
-                </dl>
-              </Panel>
-
-              <Callout title="Lo que no se puede concluir" tone="warning" icon={AlertTriangle}>
-                <ul className="list-disc space-y-1 pl-4">
-                  <li>La muestra es sintética: no describe estudiantes reales.</li>
-                  <li>Las asociaciones no demuestran causalidad.</li>
-                  <li>El promedio es una variable de la simulación, no una medición oficial.</li>
-                  <li>Los niveles de rendimiento son una categorización didáctica.</li>
-                  <li>Con pocos casos o filtros agresivos, las estimaciones son inestables.</li>
-                </ul>
-              </Callout>
-            </div>
+            <Callout title="Lo que no se puede concluir" tone="warning" icon={AlertTriangle}>
+              <ul className="list-disc space-y-1 pl-4">
+                <li>La muestra es sintética: no describe estudiantes reales.</li>
+                <li>Las asociaciones no demuestran causalidad.</li>
+                <li>El promedio es una variable de la simulación, no una medición oficial.</li>
+                <li>Los niveles de rendimiento son una categorización didáctica.</li>
+                <li>Con pocos casos o filtros agresivos, las estimaciones son inestables.</li>
+              </ul>
+            </Callout>
           </div>
 
           <Callout title="Cómo leer los resultados" icon={Info}>
@@ -196,13 +157,6 @@ export function InterpretationSection() {
               ))}
             </div>
           </details>
-
-          <div className="flex items-center gap-2 text-faint">
-            <ShieldCheck aria-hidden="true" size={14} />
-            <span className="text-label">
-              {VARIABLE_MAP.gpa.label}: {formatNumber(averageGpa, 1)} puntos en la muestra visible.
-            </span>
-          </div>
         </div>
       )}
     </Section>
