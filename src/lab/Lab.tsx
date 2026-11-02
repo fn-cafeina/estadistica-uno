@@ -39,6 +39,30 @@ export function Lab() {
     window.scrollTo?.(0, 0);
   }, [section]);
 
+  // Los navegadores no imprimen el contenido de un <details> cerrado. Al
+  // imprimir se abren las tablas de respaldo y se restauran al terminar.
+  useEffect(() => {
+    let opened: HTMLDetailsElement[] = [];
+    const openAll = () => {
+      opened = Array.from(document.querySelectorAll<HTMLDetailsElement>(".lab-details:not([open])"));
+      opened.forEach((node) => {
+        node.open = true;
+      });
+    };
+    const restore = () => {
+      opened.forEach((node) => {
+        node.open = false;
+      });
+      opened = [];
+    };
+    window.addEventListener("beforeprint", openAll);
+    window.addEventListener("afterprint", restore);
+    return () => {
+      window.removeEventListener("beforeprint", openAll);
+      window.removeEventListener("afterprint", restore);
+    };
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return;

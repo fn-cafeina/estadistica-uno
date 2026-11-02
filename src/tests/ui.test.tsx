@@ -146,6 +146,22 @@ test("expone hipótesis y genera la tabla de contingencia", async () => {
   expect(within(tests!).getAllByText(/¿cómo se interpreta\?/i).length).toBeGreaterThan(0);
 });
 
+test("abre los detalles plegados al imprimir", async () => {
+  render(<App />);
+  const details = document.querySelector(".lab-details") as HTMLDetailsElement;
+  expect(details.open).toBe(false);
+
+  act(() => {
+    window.dispatchEvent(new Event("beforeprint"));
+  });
+  expect(details.open).toBe(true);
+
+  act(() => {
+    window.dispatchEvent(new Event("afterprint"));
+  });
+  expect(details.open).toBe(false);
+});
+
 test("incluye la síntesis y el botón de impresión", async () => {
   render(<App />);
   goto("interpretacion");
