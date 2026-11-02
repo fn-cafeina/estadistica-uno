@@ -56,7 +56,7 @@ export function Descriptive() {
           action={<ResetFiltersButton onClick={resetFilters} />}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Panel title="Variable seleccionada" meta={variable.unit ? `Unidad: ${variable.unit}` : undefined}>
             <div className="grid gap-5 lg:grid-cols-[0.3fr_0.7fr] lg:items-start">
               <div>
@@ -85,7 +85,7 @@ export function Descriptive() {
                   unit={variable.unit}
                   ariaLabel={`Tira de cinco números de ${variable.label}: mínimo ${formatNumber(summary.min, 1)}, Q1 ${formatNumber(summary.q1, 1)}, mediana ${formatNumber(summary.median, 1)}, Q3 ${formatNumber(summary.q3, 1)}, máximo ${formatNumber(summary.max, 1)}`}
                 />
-                <p className="mt-1 text-[0.68rem] leading-relaxed text-faint">
+                <p className="mt-1 text-label leading-relaxed text-faint">
                   La caja va de Q1 a Q3. La línea central es la mediana. Los extremos son el mínimo y
                   el máximo observados.
                 </p>
@@ -143,7 +143,7 @@ export function Descriptive() {
                         <td className="font-medium text-fg">
                           {item.label}
                           {item.unit ? (
-                            <span className="ml-1 text-[0.64rem] text-faint">({item.unit})</span>
+                            <span className="ml-1 text-label text-faint">({item.unit})</span>
                           ) : null}
                         </td>
                         <td className="num">{itemSummary.n}</td>

@@ -246,7 +246,7 @@ export function Frequencies() {
 
       <div className="mt-4 flex items-center gap-2 text-faint">
         <SlidersHorizontal aria-hidden="true" size={13} />
-        <span className="text-[0.68rem]">Cambia la variable o los intervalos para actualizar las tablas.</span>
+        <span className="text-label">Cambia la variable o los intervalos para actualizar las tablas.</span>
       </div>
     </Section>
   );

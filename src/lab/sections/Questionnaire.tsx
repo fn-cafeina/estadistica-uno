@@ -36,15 +36,15 @@ export function Questionnaire() {
               <tbody>
                 {QUESTIONNAIRE.map((variable) => (
                   <tr key={variable.key}>
-                    <td className="font-mono text-[0.62rem] text-faint">
+                    <td className="font-mono text-label text-faint">
                       {String(variable.number).padStart(2, "0")}
                     </td>
                     <td className="min-w-[18rem] font-medium text-fg">{variable.question}</td>
                     <td>
-                      <code className="font-mono text-[0.64rem] text-muted">{variable.key}</code>
+                      <code className="font-mono text-label text-muted">{variable.key}</code>
                     </td>
                     <td className="whitespace-nowrap text-muted">{TYPE_LABELS[variable.type]}</td>
-                    <td className="min-w-[16rem] text-[0.68rem] leading-relaxed text-muted">
+                    <td className="min-w-[16rem] text-label leading-relaxed text-muted">
                       {variable.unit ? `${variable.unit}. ` : ""}
                       {variable.coding}
                     </td>
@@ -55,7 +55,7 @@ export function Questionnaire() {
           </TableWrap>
         </Panel>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Panel title="Ficha de la muestra" meta="Sintética">
             <dl>
               <KeyValue label="Registros" value={sample.n} />

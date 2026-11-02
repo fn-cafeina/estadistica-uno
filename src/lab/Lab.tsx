@@ -101,7 +101,7 @@ export function Lab() {
         <div className="lab-sidebar-footer">
           <strong>Laboratorio de estadística</strong>
           <p className="mt-1">Tecnología y rendimiento académico universitario.</p>
-          <p className="mt-2 font-mono text-[0.55rem] uppercase tracking-[0.08em]">
+          <p className="mt-2 font-mono text-label uppercase tracking-[0.08em]">
             {filteredRows.length} de {sample.n} registros · semilla {sample.seed}
           </p>
         </div>

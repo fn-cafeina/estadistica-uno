@@ -80,12 +80,12 @@ export function Overview() {
           <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
             {GROUP_MEMBERS.map((name, index) => (
               <li key={name} className="border-t border-border pt-2">
-                <span className="font-mono text-[0.56rem] text-accent">0{index + 1}</span>
+                <span className="font-mono text-label text-accent">0{index + 1}</span>
                 <span className="mt-1 block font-display text-lg leading-tight text-fg">{name}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-4 border-t border-border pt-3 font-mono text-[0.58rem] uppercase tracking-[0.1em] text-faint">
+          <p className="mt-4 border-t border-border pt-3 font-mono text-label uppercase tracking-[0.1em] text-faint">
             Estadística Introductoria · Ingeniería en Sistemas
           </p>
         </Panel>
@@ -130,10 +130,10 @@ export function Overview() {
             <a key={step.title} href={step.href} className="lab-panel block transition-colors hover:bg-surface-2">
               <div className="flex items-center gap-2 text-accent">
                 <Icon aria-hidden="true" size={15} strokeWidth={1.9} />
-                <span className="font-mono text-[0.6rem] uppercase tracking-[0.08em]">{step.title}</span>
+                <span className="font-mono text-label uppercase tracking-[0.08em]">{step.title}</span>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
-              <span className="mt-3 inline-flex items-center gap-1 font-mono text-[0.55rem] uppercase tracking-[0.08em] text-faint">
+              <span className="mt-3 inline-flex items-center gap-1 font-mono text-label uppercase tracking-[0.08em] text-faint">
                 Ir a la sección <ArrowRight aria-hidden="true" size={12} />
               </span>
             </a>

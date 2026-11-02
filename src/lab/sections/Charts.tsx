@@ -109,7 +109,7 @@ export function Charts() {
           action={<ResetFiltersButton onClick={resetFilters} />}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Panel title="Controles de los gráficos" meta="Variables y intervalos">
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <SelectField

@@ -137,7 +137,7 @@ export function Tests() {
           action={<ResetFiltersButton onClick={resetFilters} />}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Panel title="Chi-cuadrado" meta={chiPair.label}>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               <SelectField

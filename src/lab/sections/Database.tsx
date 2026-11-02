@@ -94,7 +94,7 @@ function DataTable({
               {columns.map((column) => (
                 <td
                   key={column.key}
-                  className={column.key === "id" ? "font-mono text-[0.65rem] text-muted" : "num"}
+                  className={column.key === "id" ? "font-mono text-label text-muted" : "num"}
                 >
                   {cellValue(row, column.key)}
                 </td>
@@ -209,7 +209,7 @@ export function DatabaseSection() {
                 Descargar CSV
               </Button>
             </div>
-            <p className="font-mono text-[0.6rem] uppercase tracking-[0.06em] text-faint">
+            <p className="font-mono text-label uppercase tracking-[0.06em] text-faint">
               Semilla {sample.seed} · {formatDate(sample.generatedAt)}
             </p>
           </div>
@@ -307,7 +307,7 @@ export function DatabaseSection() {
               />
             ) : (
               <>
-                <p className="mb-2 text-[0.68rem] text-faint">
+                <p className="mb-2 text-label text-faint">
                   Desliza horizontalmente para ver todas las columnas.
                 </p>
                 <div className="lab-table-wrap max-h-[34rem] overflow-auto">
@@ -356,7 +356,7 @@ export function DatabaseSection() {
                           {columns.map((column) => (
                             <td
                               key={column.key}
-                              className={column.key === "id" ? "font-mono text-[0.65rem] text-muted" : "num"}
+                              className={column.key === "id" ? "font-mono text-label text-muted" : "num"}
                             >
                               {cellValue(row, column.key)}
                             </td>

@@ -246,7 +246,7 @@ export function SegmentedControl<T extends string>({
             aria-pressed={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              "px-3 py-1.5 font-mono text-[0.6rem] font-medium uppercase tracking-[0.08em] transition-colors",
+              "px-3 py-1.5 font-mono text-label font-medium uppercase tracking-[0.08em] transition-colors",
               index > 0 && "border-l border-border-strong",
               active ? "bg-accent text-bg" : "text-muted hover:bg-surface-2 hover:text-fg",
             )}

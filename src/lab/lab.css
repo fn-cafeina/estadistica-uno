@@ -42,7 +42,7 @@
 
 .lab-brand-title {
   font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.1em;
   line-height: 1.3;
@@ -53,7 +53,7 @@
   margin-top: 0.15rem;
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.54rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.06em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -72,7 +72,7 @@
   padding: 0.52rem 0.65rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -97,7 +97,7 @@
 .lab-sidebar-footer {
   margin-top: auto;
   border-top: 1px solid var(--border);
-  padding-top: 1rem;
+  padding-top: var(--space-4);
   color: var(--faint);
   font-size: 0.72rem;
   line-height: 1.5;
@@ -136,7 +136,7 @@
   overflow: hidden;
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   line-height: 1.3;
   text-overflow: ellipsis;
@@ -150,7 +150,7 @@
   margin-top: 0.15rem;
   color: var(--text);
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 400;
   line-height: 1.1;
   text-overflow: ellipsis;
@@ -167,12 +167,13 @@
 .lab-content {
   width: min(100%, 1180px);
   margin: 0 auto;
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2.5rem) 5rem;
+  padding: clamp(var(--space-5), 4vw, var(--space-7)) clamp(1rem, 3vw, 2.5rem)
+    var(--space-8);
 }
 
 .lab-section {
   border-top: 1px solid var(--border);
-  padding: clamp(2rem, 4vw, 3.25rem) 0;
+  padding: clamp(var(--space-6), 4vw, var(--space-7)) 0;
   scroll-margin-top: 5rem;
 }
 
@@ -210,7 +211,7 @@
   align-items: stretch;
   justify-content: space-between;
   gap: 1rem;
-  margin-top: clamp(2rem, 4vw, 3rem);
+  margin-top: var(--space-7);
   border-top: 1px solid var(--border-strong);
   padding-top: 1rem;
 }
@@ -221,7 +222,7 @@
   gap: 0.5rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -260,7 +261,7 @@
   gap: 0.45rem;
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   line-height: 1.3;
@@ -275,7 +276,7 @@
 .lab-title {
   margin-top: 0.5rem;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: var(--fs-title);
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.98;
@@ -308,7 +309,7 @@
   border: 1px solid var(--border-strong);
   border-radius: 2px;
   background: color-mix(in srgb, var(--surface) 88%, transparent);
-  padding: clamp(1rem, 2vw, 1.35rem);
+  padding: clamp(var(--space-4), 2vw, var(--space-5));
 }
 
 .lab-panel-head {
@@ -325,14 +326,14 @@
 .lab-panel-title {
   color: var(--text);
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: var(--fs-subtitle);
   line-height: 1.1;
 }
 
 .lab-panel-meta {
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   line-height: 1.4;
   text-transform: uppercase;
@@ -341,7 +342,7 @@
 .lab-grid {
   display: grid;
   min-width: 0;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .lab-grid > *,
@@ -377,13 +378,13 @@
 .lab-metric {
   min-width: 0;
   background: var(--surface);
-  padding: 0.9rem 1rem;
+  padding: var(--space-4);
 }
 
 .lab-metric-label {
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.1em;
   line-height: 1.35;
   text-transform: uppercase;
@@ -393,7 +394,7 @@
   margin-top: 0.35rem;
   color: var(--text);
   font-family: var(--font-display);
-  font-size: clamp(1.65rem, 2.4vw, 2.35rem);
+  font-size: var(--fs-readout);
   letter-spacing: -0.03em;
   line-height: 0.95;
   font-variant-numeric: tabular-nums;
@@ -411,30 +412,13 @@
   line-height: 1.4;
 }
 
-.lab-stat {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 4.8rem);
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-  font-variant-numeric: tabular-nums;
-}
-
 .lab-label {
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.57rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.12em;
   line-height: 1.35;
-  text-transform: uppercase;
-}
-
-.lab-fig {
-  color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  line-height: 1.4;
   text-transform: uppercase;
 }
 
@@ -448,7 +432,7 @@
   padding: 0.26rem 0.55rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.57rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.06em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -475,7 +459,7 @@
   background: transparent;
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.06em;
   line-height: 1.2;
@@ -564,7 +548,7 @@
   margin-bottom: 0.35rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.57rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   line-height: 1.35;
   text-transform: uppercase;
@@ -573,7 +557,7 @@
 .lab-form-hint {
   margin-top: 0.3rem;
   color: var(--faint);
-  font-size: 0.68rem;
+  font-size: var(--fs-label);
   line-height: 1.4;
 }
 
@@ -581,7 +565,7 @@
   border: 1px solid var(--border);
   border-left: 2px solid var(--accent);
   background: color-mix(in srgb, var(--surface) 80%, transparent);
-  padding: 0.85rem 1rem;
+  padding: var(--space-4);
 }
 
 .lab-callout[data-tone="warning"] {
@@ -601,9 +585,10 @@
   align-items: center;
   gap: 0.4rem;
   color: var(--text);
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  line-height: 1.15;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .lab-callout-body {
@@ -616,7 +601,7 @@
 .lab-interpretation {
   border-left: 2px solid var(--accent);
   background: color-mix(in srgb, var(--surface) 80%, transparent);
-  padding: 0.9rem 1rem;
+  padding: var(--space-4);
 }
 
 .lab-interpretation .lab-label {
@@ -667,7 +652,7 @@
     margin-bottom: 0.35rem;
     color: var(--faint);
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: var(--fs-label);
     letter-spacing: 0.06em;
     line-height: 1.4;
     text-transform: uppercase;
@@ -687,7 +672,7 @@
   padding: 0.48rem 0.42rem;
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.54rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.07em;
   line-height: 1.35;
@@ -721,13 +706,13 @@
 .lab-chart {
   border: 1px solid var(--border-strong);
   background: color-mix(in srgb, var(--surface) 88%, transparent);
-  padding: 0.9rem;
+  padding: var(--space-4);
 }
 
 .lab-chart-title {
   color: var(--text);
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: var(--fs-subtitle);
   line-height: 1.15;
 }
 
@@ -774,7 +759,7 @@
   cursor: pointer;
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.56rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   list-style: none;
   text-transform: uppercase;
@@ -811,10 +796,10 @@
 
 .lab-footer {
   border-top: 1px solid var(--border-strong);
-  padding: 1.5rem 0 0;
+  padding: var(--space-5) 0 0;
   color: var(--faint);
   font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.06em;
   line-height: 1.6;
   text-transform: uppercase;
@@ -929,16 +914,12 @@
   }
 
   .lab-content {
-    padding: 1.25rem 0.9rem 3rem;
+    padding: var(--space-4) 0.9rem var(--space-7);
   }
 
   .lab-section {
-    padding: 1.6rem 0;
+    padding: var(--space-5) 0;
     scroll-margin-top: 8rem;
-  }
-
-  .lab-title {
-    font-size: clamp(1.75rem, 9vw, 2.5rem);
   }
 
   .lab-metrics {

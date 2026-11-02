@@ -124,7 +124,7 @@ export function InterpretationSection() {
           action={<ResetFiltersButton onClick={resetFilters} />}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="lab-metrics lab-metrics-3">
             <Metric label="Registros" value={filteredRows.length} hint={`Semilla ${sample.seed}`} accent />
             <Metric label="Promedio medio" value={formatNumber(averageGpa, 1)} hint="Puntos" />
@@ -139,7 +139,7 @@ export function InterpretationSection() {
               <ol className="space-y-3">
                 {findings.map((finding, index) => (
                   <li key={finding} className="border-t border-border pt-3 first:border-0 first:pt-0">
-                    <span className="font-mono text-[0.58rem] text-accent">{String(index + 1).padStart(2, "0")}</span>
+                    <span className="font-mono text-label text-accent">{String(index + 1).padStart(2, "0")}</span>
                     <p className="mt-1 text-sm leading-relaxed text-muted">{finding}</p>
                   </li>
                 ))}
@@ -156,7 +156,7 @@ export function InterpretationSection() {
               </div>
             </Panel>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <Panel title="Ficha de resultados" meta="Resumen">
                 <dl>
                   <KeyValue label="n visible" value={filteredRows.length} />
@@ -209,7 +209,7 @@ export function InterpretationSection() {
 
           <div className="flex items-center gap-2 text-faint">
             <ShieldCheck aria-hidden="true" size={14} />
-            <span className="text-[0.68rem]">
+            <span className="text-label">
               {VARIABLE_MAP.gpa.label}: {formatNumber(averageGpa, 1)} puntos en la muestra visible.
             </span>
           </div>
