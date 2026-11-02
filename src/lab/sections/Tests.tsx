@@ -126,8 +126,6 @@ export function Tests({ procedure }: { procedure: string | null }) {
   return (
     <Section
       id="pruebas"
-      number="05 / PRUEBAS"
-      icon={FlaskConical}
       title={<>Qué se puede <em>sostener</em>.</>}
       description="Contrastes de independencia y modelos de asociación lineal. Cada resultado incluye hipótesis, supuestos, decisión y límites."
       aside={<Badge tone="accent">α = {alpha}</Badge>}

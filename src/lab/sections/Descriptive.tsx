@@ -69,8 +69,6 @@ export function Descriptive() {
   return (
     <Section
       id="descriptiva"
-      number="04 / DESCRIPTIVA"
-      icon={Calculator}
       title={<>El centro y la <em>dispersión</em>.</>}
       description="Media, mediana, cuantiles y desviación estándar de la muestra visible. Son resúmenes descriptivos, no parámetros de toda la población."
       aside={<Badge tone="accent">n = {filteredRows.length}</Badge>}

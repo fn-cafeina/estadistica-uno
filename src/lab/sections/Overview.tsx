@@ -1,4 +1,4 @@
-import { ArrowRight, Home } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLab } from "../LabContext";
 import { mean } from "../../stats/descriptive";
 import { pearsonCorrelation } from "../../stats/correlation";
@@ -18,8 +18,6 @@ export function Overview() {
   return (
     <Section
       id="inicio"
-      number="00 / INICIO"
-      icon={Home}
       title={
         <>
           Tecnología y rendimiento <em>académico</em> universitario.

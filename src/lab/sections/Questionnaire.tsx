@@ -1,4 +1,4 @@
-import { ClipboardList, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { QUESTIONNAIRE, PERFORMANCE_VARIABLE } from "../../data/schema";
 import { formatDate } from "../../lib/format";
 import { useLab } from "../LabContext";
@@ -11,8 +11,6 @@ export function Questionnaire() {
   return (
     <Section
       id="cuestionario"
-      number="01 / CUESTIONARIO"
-      icon={ClipboardList}
       title={<>El instrumento y sus <em>variables</em>.</>}
       description="Trece preguntas adaptadas al tema. Cada una tiene una variable, un tipo de medición y una codificación que permite construir la base."
       aside={<Badge tone="accent">{QUESTIONNAIRE.length} preguntas</Badge>}

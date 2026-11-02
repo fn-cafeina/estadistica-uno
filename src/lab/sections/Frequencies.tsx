@@ -47,8 +47,6 @@ export function Frequencies() {
   return (
     <Section
       id="frecuencias"
-      number="03 / FRECUENCIAS"
-      icon={ListOrdered}
       title={<>Cómo se reparten los <em>datos</em>.</>}
       description="Frecuencias absolutas, relativas y porcentuales. Para variables ordinales y datos agrupados se agregan las frecuencias acumuladas."
       aside={<Badge tone="accent">n = {filteredRows.length}</Badge>}

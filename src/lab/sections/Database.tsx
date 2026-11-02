@@ -187,8 +187,6 @@ export function DatabaseSection() {
   return (
     <Section
       id="base-datos"
-      number="02 / BASE DE DATOS"
-      icon={DatabaseIcon}
       title={<>La muestra, <em>fila por fila</em>.</>}
       description="Ordena, busca y filtra los registros. Los filtros globales afectan la tabla y todos los análisis del laboratorio."
       aside={

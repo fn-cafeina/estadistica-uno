@@ -97,8 +97,6 @@ export function Charts({ procedure }: { procedure: string | null }) {
   return (
     <Section
       id="graficos"
-      number="06 / GRÁFICOS"
-      icon={BarChart3}
       title={<>Mirar los datos <em>también</em>.</>}
       description="Los gráficos usan las filas visibles y se actualizan con la muestra, los filtros y los selectores. Cada uno incluye una lectura breve y su tabla de respaldo."
       aside={<Badge tone="accent">SVG nativo</Badge>}

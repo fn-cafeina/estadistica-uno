@@ -104,8 +104,6 @@ export function InterpretationSection() {
   return (
     <Section
       id="interpretacion"
-      number="07 / INTERPRETACIÓN"
-      icon={BookOpen}
       title={<>Lo que muestran los <em>datos</em>.</>}
       description="Una síntesis de los resultados visibles y de lo que no se puede concluir. La lectura cambia con la muestra y los filtros."
       aside={

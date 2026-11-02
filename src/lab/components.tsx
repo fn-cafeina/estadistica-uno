@@ -9,16 +9,12 @@ export function cn(...classes: Array<string | false | null | undefined>): string
 
 export function Section({
   id,
-  number,
-  icon: Icon,
   title,
   description,
   aside,
   children,
 }: {
   id: string;
-  number: string;
-  icon: LucideIcon;
   title: ReactNode;
   description: ReactNode;
   aside?: ReactNode;
@@ -28,10 +24,6 @@ export function Section({
     <section id={id} className="lab-section" aria-labelledby={`${id}-title`}>
       <header className="lab-section-head">
         <div className="lab-section-head-main">
-          <p className="lab-kicker">
-            <Icon aria-hidden="true" size={13} />
-            {number}
-          </p>
           <h2 id={`${id}-title`} className="lab-title">
             {title}
           </h2>

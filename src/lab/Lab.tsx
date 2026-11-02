@@ -1,7 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { Download, Printer, RefreshCw } from "lucide-react";
 import { useLab } from "./LabContext";
-import { NAV_ITEMS, PROCEDURES, procedureLabel } from "./navigation";
+import { NAV_ITEMS, PROCEDURES } from "./navigation";
 import { useActiveSection, parseLocation } from "./useActiveSection";
 import { Overview } from "./sections/Overview";
 import { Questionnaire } from "./sections/Questionnaire";
@@ -47,9 +47,6 @@ function stopIndex(section: string, procedure: string | null): number {
 export function Lab() {
   const { sample, filteredRows, regenerate, exportCsv } = useLab();
   const { section, procedure } = useActiveSection();
-  const activeIndex = Math.max(0, NAV_ITEMS.findIndex((item) => item.id === section));
-  const activeItem = NAV_ITEMS[activeIndex];
-  const procedureTitle = procedureLabel(section, procedure);
 
   useEffect(() => {
     window.scrollTo?.(0, 0);
@@ -105,8 +102,6 @@ export function Lab() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const progress = `${String(activeIndex + 1).padStart(2, "0")} / ${String(NAV_ITEMS.length).padStart(2, "0")}`;
-
   return (
     <div className="lab-app">
       <a className="lab-skip-link" href="#inicio">
@@ -153,15 +148,6 @@ export function Lab() {
 
       <div className="lab-main">
         <header className="lab-header">
-          <div className="lab-header-title">
-            <p>
-              Laboratorio de estadística · {progress}
-            </p>
-            <strong>
-              {activeItem?.label ?? "Inicio"}
-              {procedureTitle ? <span className="lab-header-sub"> · {procedureTitle}</span> : null}
-            </strong>
-          </div>
           <div className="lab-header-actions">
             <button type="button" className="lab-button lab-button-primary" onClick={regenerate}>
               <RefreshCw aria-hidden="true" size={13} />
