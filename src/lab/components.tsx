@@ -1,7 +1,7 @@
 import { useId, type ButtonHTMLAttributes, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
-import { NAV_ITEMS, PROCEDURES } from "./navigation";
+import { RotateCcw } from "lucide-react";
+import { PROCEDURES } from "./navigation";
 
 export function cn(...classes: Array<string | false | null | undefined>): string {
   return classes.filter(Boolean).join(" ");
@@ -397,36 +397,4 @@ export function ProcedureTabs({
   );
 }
 
-// Procedimientos inactivos: quedan montados y ocultos para conservar su estado
-// y para que la impresión siga sacando el informe completo.
-export function ViewNav({ active }: { active: string }) {
-  const index = NAV_ITEMS.findIndex((item) => item.id === active);
-  const prev = index > 0 ? NAV_ITEMS[index - 1] : undefined;
-  const next = index >= 0 && index < NAV_ITEMS.length - 1 ? NAV_ITEMS[index + 1] : undefined;
-
-  return (
-    <nav className="lab-view-nav no-print" aria-label="Navegación entre secciones">
-      {prev ? (
-        <a className="lab-view-nav-link" href={`#${prev.id}`}>
-          <ChevronLeft aria-hidden="true" size={14} />
-          <span>
-            <span className="lab-view-nav-num">{prev.number}</span> {prev.label}
-          </span>
-        </a>
-      ) : (
-        <span />
-      )}
-      {next ? (
-        <a className="lab-view-nav-link lab-view-nav-next" href={`#${next.id}`}>
-          <span>
-            <span className="lab-view-nav-num">{next.number}</span> {next.label}
-          </span>
-          <ChevronRight aria-hidden="true" size={14} />
-        </a>
-      ) : (
-        <span />
-      )}
-    </nav>
-  );
-}
 

@@ -11,7 +11,7 @@ import { Descriptive } from "./sections/Descriptive";
 import { Tests } from "./sections/Tests";
 import { Charts } from "./sections/Charts";
 import { InterpretationSection } from "./sections/InterpretationSection";
-import { IconButton, ViewNav } from "./components";
+import { IconButton } from "./components";
 import "./lab.css";
 
 // Todas las vistas quedan montadas: conservan su estado local y la impresión
@@ -179,8 +179,6 @@ export function Lab() {
               {view(procedure)}
             </div>
           ))}
-
-          <ViewNav active={section} />
 
           <footer className="lab-footer">
             <p>UNAN-León · Ingeniería en Sistemas · Estadística Introductoria · 2026</p>
