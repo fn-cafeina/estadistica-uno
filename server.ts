@@ -1,12 +1,15 @@
+import { resolveStaticPath } from "./src/lib/staticPath";
+
 const dist = `${import.meta.dir}/dist`;
 const port = Number(process.env.PORT ?? 3001);
 
 const server = Bun.serve({
   port,
   async fetch(request) {
-    const url = new URL(request.url);
-    let pathname = decodeURIComponent(url.pathname);
-    if (pathname === "/") pathname = "/index.html";
+    const pathname = resolveStaticPath(new URL(request.url).pathname);
+    if (pathname === null) {
+      return new Response("Not found", { status: 404 });
+    }
 
     const file = Bun.file(`${dist}${pathname}`);
     if (await file.exists()) {
