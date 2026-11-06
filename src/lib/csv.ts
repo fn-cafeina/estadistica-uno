@@ -1,4 +1,4 @@
-import { VARIABLES, formatCategoricalValue, isQualitativeKey } from "../data/schema";
+import { VARIABLES, isQualitativeKey } from "../data/schema";
 import type { StudentRecord } from "../data/types";
 
 function escapeCell(value: unknown): string {
@@ -30,9 +30,7 @@ export function recordsToCsv(records: readonly StudentRecord[]): string {
     ...VARIABLES.map((variable) => {
       if (isQualitativeKey(variable.key)) {
         const value = record[variable.key] as string | number;
-        return variable.key === "year"
-          ? Number(formatCategoricalValue("year", String(value)))
-          : value;
+        return variable.key === "year" ? Number(value) : value;
       }
       return record[variable.key as keyof StudentRecord];
     }),
