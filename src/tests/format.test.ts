@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { formatEquation, formatNumber } from "../lib/format";
+import { formatEquation, formatDate, formatNumber } from "../lib/format";
 
 // El separador decimal depende del runtime (coma en el navegador, punto en
 // algunos Node), así que los test comparan con formatNumber, no con literales.
@@ -24,5 +24,17 @@ describe("formatEquation", () => {
 
   test("intercepto negativo con pendiente negativa", () => {
     expectEquation(-0.148, -2.5, "edad", "Pantalla", "−");
+  });
+});
+
+describe("formatDate", () => {
+  test("muestra solo el día, sin depender del timezone local", () => {
+    // La fecha fija de la muestra se formatea en UTC: da igual el huso del navegador.
+    expect(formatDate("2026-02-14T00:00:00.000Z")).toBe("14 feb 2026");
+  });
+
+  test("maneja valores inválidos", () => {
+    expect(formatDate(null)).toBe("s/d");
+    expect(formatDate("no es una fecha")).toBe("s/d");
   });
 });

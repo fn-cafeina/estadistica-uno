@@ -28,7 +28,8 @@ export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "s/d";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "s/d";
-  return new Intl.DateTimeFormat(LOCALE, { dateStyle: "medium", timeStyle: "short" }).format(date);
+  // Zona horaria fija: la fecha impresa no depende del navegador de quien abra la web.
+  return new Intl.DateTimeFormat(LOCALE, { dateStyle: "medium", timeZone: "UTC" }).format(date);
 }
 
 export function formatUnit(value: number | null | undefined, unit: string | null, digits = 1): string {
