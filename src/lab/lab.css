@@ -94,6 +94,63 @@
   opacity: 0.8;
 }
 
+.lab-nav-num {
+  flex: none;
+  font-size: 0.62rem;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+}
+
+.lab-nav-link[data-active="true"] .lab-nav-num {
+  color: var(--accent);
+}
+
+/* ---- Barra de muestra: los únicos controles de la muestra ----------------- */
+.lab-sample-bar {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.lab-sample-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+  padding: 0.4rem 0.6rem;
+}
+
+.lab-sample-readout-label {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lab-sample-readout-value {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.lab-sample-controls {
+  display: grid;
+  gap: 0.55rem;
+}
+
+/* En escritorio la barra vive al pie de la sidebar; en móvil pasa a un bloque
+   horizontal desplazable bajo el header. */
+.lab-sample-bar--side {
+  margin-bottom: var(--space-4);
+}
+
+.lab-sample-bar--top {
+  display: none;
+}
+
 .lab-sidebar-footer {
   margin-top: auto;
   border-top: 1px solid var(--border);
@@ -120,7 +177,7 @@
   display: flex;
   min-height: 3.8rem;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 1rem;
   border-bottom: 1px solid var(--border-strong);
   background: color-mix(in srgb, var(--bg) 94%, transparent);
@@ -133,6 +190,44 @@
   flex: none;
   align-items: center;
   gap: 0.4rem;
+}
+
+.lab-station {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.lab-station-index {
+  flex: none;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lab-station-name {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: var(--fs-subtitle);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lab-station-nav {
+  display: flex;
+  flex: none;
+  gap: 0.25rem;
+}
+
+.lab-icon-button:disabled {
+  color: var(--faint);
+  cursor: default;
+  opacity: 0.5;
 }
 
 .lab-content {
@@ -789,6 +884,24 @@
     display: block;
   }
 
+  .lab-sample-bar--side {
+    display: none;
+  }
+
+  .lab-sample-bar--top {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    padding: 0.5rem clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .lab-sample-controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .lab-sidebar {
     position: static;
     height: auto;
@@ -850,6 +963,19 @@
   .lab-header-actions {
     width: 100%;
     justify-content: flex-end;
+  }
+
+  .lab-station {
+    width: 100%;
+  }
+
+  .lab-sample-bar--top {
+    grid-template-columns: 1fr auto;
+  }
+
+  .lab-sample-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
   }
 
   .lab-content {

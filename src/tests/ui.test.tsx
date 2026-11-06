@@ -83,9 +83,11 @@ test("la muestra es fija: no existe botón de regeneración", () => {
 
   expect(screen.queryAllByRole("button", { name: /nueva muestra/i })).toHaveLength(0);
 
-  const sampleMeta = document.querySelector(".lab-sidebar-footer p:last-child")?.textContent;
-  expect(sampleMeta).toContain("80 de 80 registros");
-  expect(sampleMeta).toContain(`semilla ${DEFAULT_SEED}`);
+  const sampleMeta = document.querySelector(".lab-sample-readout")?.textContent;
+  expect(sampleMeta).toContain("n = 80/80");
+
+  const footer = document.querySelector(".lab-sidebar-footer")?.textContent;
+  expect(footer).toContain(`semilla ${DEFAULT_SEED}`);
 });
 
 test("muestra frecuencias, descriptiva, pruebas y gráficos", async () => {
