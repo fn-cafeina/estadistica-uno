@@ -215,7 +215,8 @@ export function generateSample(n: number, seed: number = DEFAULT_SEED): Sample {
     rows,
     n: rows.length,
     seed,
-    generatedAt: new Date().toISOString(),
+    // Fecha fija: la muestra es reproducible y el informe impreso coincide siempre.
+    generatedAt: "2026-02-14T00:00:00.000Z",
   };
 }
 
@@ -239,13 +240,4 @@ function ensurePresence<K extends "sex" | "major" | "device" | "year">(
       }
     }
   }
-}
-
-export function randomSeed(): number {
-  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
-    const buffer = new Uint32Array(1);
-    crypto.getRandomValues(buffer);
-    return buffer[0] ?? Date.now();
-  }
-  return Math.floor(Date.now() % 1_000_000_000);
 }

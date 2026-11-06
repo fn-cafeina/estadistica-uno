@@ -8,6 +8,7 @@ GlobalRegistrator.register();
 
 const { act, cleanup, fireEvent, render, screen, waitFor, within } = await import("@testing-library/react");
 const { App } = await import("../App");
+const { DEFAULT_SEED } = await import("../data/types");
 
 afterEach(() => {
   cleanup();
@@ -77,16 +78,14 @@ test("filtra la base y actualiza el conteo visible", async () => {
   });
 });
 
-test("genera una nueva muestra y conserva el laboratorio", async () => {
+test("la muestra es fija: no existe botón de regeneración", () => {
   render(<App />);
-  const sampleMeta = () => document.querySelector(".lab-sidebar-footer p:last-child")?.textContent;
 
-  const before = sampleMeta();
-  expect(before).toContain("80 de 80 registros");
+  expect(screen.queryAllByRole("button", { name: /nueva muestra/i })).toHaveLength(0);
 
-  fireEvent.click(screen.getAllByRole("button", { name: /nueva muestra/i })[0]!);
-  expect(sampleMeta()).toContain("80 de 80 registros");
-  expect(sampleMeta()).not.toBe(before);
+  const sampleMeta = document.querySelector(".lab-sidebar-footer p:last-child")?.textContent;
+  expect(sampleMeta).toContain("80 de 80 registros");
+  expect(sampleMeta).toContain(`semilla ${DEFAULT_SEED}`);
 });
 
 test("muestra frecuencias, descriptiva, pruebas y gráficos", async () => {

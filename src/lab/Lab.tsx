@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react";
-import { Download, Printer, RefreshCw } from "lucide-react";
+import { Download, Printer } from "lucide-react";
 import { useLab } from "./LabContext";
 import { NAV_ITEMS, PROCEDURES } from "./navigation";
 import { useActiveSection, parseLocation } from "./useActiveSection";
@@ -45,7 +45,7 @@ function stopIndex(section: string, procedure: string | null): number {
 }
 
 export function Lab() {
-  const { sample, filteredRows, regenerate, exportCsv } = useLab();
+  const { sample, filteredRows, exportCsv } = useLab();
   const { section, procedure } = useActiveSection();
 
   useEffect(() => {
@@ -149,11 +149,6 @@ export function Lab() {
       <div className="lab-main">
         <header className="lab-header">
           <div className="lab-header-actions">
-            <button type="button" className="lab-button lab-button-primary" onClick={regenerate}>
-              <RefreshCw aria-hidden="true" size={13} />
-              <span className="hidden sm:inline">Nueva muestra</span>
-              <span className="sm:hidden">Nueva</span>
-            </button>
             <IconButton icon={Download} label="Descargar CSV" onClick={exportCsv} />
             <IconButton icon={Printer} label="Imprimir reporte" onClick={() => window.print()} />
           </div>

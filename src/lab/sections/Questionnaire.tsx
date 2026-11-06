@@ -61,8 +61,8 @@ export function Questionnaire() {
               <KeyValue label="Origen" value="Datos sintéticos" />
             </dl>
             <p className="mt-3 text-[0.7rem] leading-relaxed text-faint">
-              La semilla permite reproducir la muestra. Al generar una nueva, la tabla y todos los
-              análisis cambian.
+              La muestra es fija: se genera una sola vez con esta semilla y no se regenera, para
+              que la web, la impresión y los documentos siempre muestren los mismos datos.
             </p>
           </Panel>
 

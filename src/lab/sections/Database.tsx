@@ -5,10 +5,8 @@ import {
   ArrowUpDown,
   ChevronLeft,
   ChevronRight,
-  Database as DatabaseIcon,
   Download,
   Filter,
-  RefreshCw,
   RotateCcw,
   Search,
   X,
@@ -114,7 +112,6 @@ export function DatabaseSection() {
     activeFilterCount,
     setFilter,
     resetFilters,
-    regenerate,
     exportCsv,
   } = useLab();
 
@@ -199,9 +196,6 @@ export function DatabaseSection() {
         <div className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
-              <Button variant="primary" icon={RefreshCw} onClick={regenerate}>
-                Nueva muestra
-              </Button>
               <Button icon={Download} onClick={exportCsv}>
                 Descargar CSV
               </Button>

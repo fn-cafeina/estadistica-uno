@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { generateSample, randomSeed } from "../data/generator";
+import { generateSample } from "../data/generator";
 import {
   DEFAULT_SAMPLE_SIZE,
   DEFAULT_SEED,
@@ -37,7 +37,6 @@ interface LabContextValue {
   activeFilterCount: number;
   setFilter: <K extends keyof LabFilters>(key: K, value: LabFilters[K]) => void;
   resetFilters: () => void;
-  regenerate: () => void;
   exportCsv: () => void;
 }
 
@@ -53,7 +52,7 @@ function filterRows(rows: readonly StudentRecord[], filters: LabFilters): Studen
 }
 
 export function LabProvider({ children }: { children: ReactNode }) {
-  const [sample, setSample] = useState<Sample>(() =>
+  const [sample] = useState<Sample>(() =>
     generateSample(DEFAULT_SAMPLE_SIZE, DEFAULT_SEED),
   );
   const [filters, setFilters] = useState<LabFilters>(EMPTY_FILTERS);
@@ -76,11 +75,6 @@ export function LabProvider({ children }: { children: ReactNode }) {
 
   const resetFilters = useCallback(() => setFilters(EMPTY_FILTERS), []);
 
-  const regenerate = useCallback(() => {
-    setSample(generateSample(DEFAULT_SAMPLE_SIZE, randomSeed()));
-    setFilters(EMPTY_FILTERS);
-  }, []);
-
   const exportCsv = useCallback(() => {
     downloadCsv(csvFilename(filteredRows.length, sample.seed), recordsToCsv(filteredRows));
   }, [filteredRows, sample.seed]);
@@ -93,7 +87,6 @@ export function LabProvider({ children }: { children: ReactNode }) {
       activeFilterCount,
       setFilter,
       resetFilters,
-      regenerate,
       exportCsv,
     }),
     [
@@ -101,7 +94,6 @@ export function LabProvider({ children }: { children: ReactNode }) {
       exportCsv,
       filteredRows,
       filters,
-      regenerate,
       resetFilters,
       sample,
       setFilter,
