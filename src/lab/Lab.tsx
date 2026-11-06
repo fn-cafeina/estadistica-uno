@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";
 import { useLab } from "./LabContext";
 import { NAV_ITEMS, PROCEDURES, procedureLabel } from "./navigation";
 import { useActiveSection, parseLocation } from "./useActiveSection";
+import { useMediaQuery } from "./useMediaQuery";
 import { Overview } from "./sections/Overview";
 import { Questionnaire } from "./sections/Questionnaire";
 import { DatabaseSection } from "./sections/Database";
@@ -103,6 +104,9 @@ function SampleBar({ placement }: { placement: "side" | "top" }) {
 export function Lab() {
   const { sample, filteredRows, exportCsv } = useLab();
   const { section, procedure } = useActiveSection();
+  // La barra de muestra vive en la sidebar en escritorio y bajo el header en
+  // móvil; solo una instancia montada a la vez para no duplicar controles.
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const found = NAV_ITEMS.findIndex((item) => item.id === section);
   const sectionIndex = found === -1 ? 0 : found;
@@ -208,7 +212,7 @@ export function Lab() {
         </nav>
 
         <div className="lab-sidebar-footer">
-          <SampleBar placement="side" />
+          {isDesktop ? <SampleBar placement="side" /> : null}
           <strong>Laboratorio de estadística</strong>
           <p className="mt-1">Tecnología y rendimiento académico universitario.</p>
           <p className="mt-2 font-mono text-label uppercase tracking-[0.08em]">
@@ -218,35 +222,36 @@ export function Lab() {
       </aside>
 
       <div className="lab-main">
-        <header className="lab-header">
-          <div className="lab-station">
-            <span className="lab-station-index">
-              Estación {String(sectionIndex + 1).padStart(2, "0")}/
-              {String(NAV_ITEMS.length).padStart(2, "0")}
-            </span>
-            <span className="lab-station-name">{stationName}</span>
-            <span className="lab-station-nav">
-              <IconButton
-                icon={ChevronLeft}
-                label="Estación anterior"
-                onClick={() => goToStation(-1)}
-                disabled={sectionIndex === 0}
-              />
-              <IconButton
-                icon={ChevronRight}
-                label="Estación siguiente"
-                onClick={() => goToStation(1)}
-                disabled={sectionIndex === NAV_ITEMS.length - 1}
-              />
-            </span>
+        <div className="lab-header-strips">
+          <div className="lab-header">
+            <div className="lab-station">
+              <span className="lab-station-index">
+                Estación {String(sectionIndex + 1).padStart(2, "0")}/
+                {String(NAV_ITEMS.length).padStart(2, "0")}
+              </span>
+              <span className="lab-station-name">{stationName}</span>
+              <span className="lab-station-nav">
+                <IconButton
+                  icon={ChevronLeft}
+                  label="Estación anterior"
+                  onClick={() => goToStation(-1)}
+                  disabled={sectionIndex === 0}
+                />
+                <IconButton
+                  icon={ChevronRight}
+                  label="Estación siguiente"
+                  onClick={() => goToStation(1)}
+                  disabled={sectionIndex === NAV_ITEMS.length - 1}
+                />
+              </span>
+            </div>
+            <div className="lab-header-actions">
+              <IconButton icon={Download} label="Descargar CSV" onClick={exportCsv} />
+              <IconButton icon={Printer} label="Imprimir reporte" onClick={() => window.print()} />
+            </div>
           </div>
-          <div className="lab-header-actions">
-            <IconButton icon={Download} label="Descargar CSV" onClick={exportCsv} />
-            <IconButton icon={Printer} label="Imprimir reporte" onClick={() => window.print()} />
-          </div>
-        </header>
-
-        <SampleBar placement="top" />
+          {!isDesktop ? <SampleBar placement="top" /> : null}
+        </div>
 
         <main className="lab-content">
           {VIEWS.map(([id, view]) => (

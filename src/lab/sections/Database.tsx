@@ -9,19 +9,9 @@ import {
   Filter,
   RotateCcw,
   Search,
-  X,
 } from "lucide-react";
 import { useLab } from "../LabContext";
-import {
-  ACADEMIC_YEARS,
-  MAJORS,
-  SEXES,
-  type AcademicYear,
-  type Major,
-  type Sex,
-  type StudentRecord,
-  type VariableKey,
-} from "../../data/types";
+import { type StudentRecord, type VariableKey } from "../../data/types";
 import { VARIABLE_MAP, VARIABLES, formatCategoricalValue } from "../../data/schema";
 import { formatDate, formatNumber } from "../../lib/format";
 import {
@@ -31,7 +21,6 @@ import {
   Button,
   EmptyState,
   ResetFiltersButton,
-  SelectField,
   TableWrap,
 } from "../components";
 
@@ -107,10 +96,7 @@ function DataTable({
 export function DatabaseSection() {
   const {
     sample,
-    filters,
     filteredRows,
-    activeFilterCount,
-    setFilter,
     resetFilters,
     exportCsv,
   } = useLab();
@@ -152,20 +138,6 @@ export function DatabaseSection() {
   const rangeStart = sortedRows.length === 0 ? 0 : currentPage * pageSize + 1;
   const rangeEnd = Math.min(sortedRows.length, (currentPage + 1) * pageSize);
 
-  const activeFilters = useMemo(() => {
-    const items: Array<{ key: "major" | "sex" | "year"; label: string; value: string }> = [];
-    if (filters.major !== "all") {
-      items.push({ key: "major", label: "Carrera", value: filters.major });
-    }
-    if (filters.sex !== "all") {
-      items.push({ key: "sex", label: "Sexo", value: filters.sex });
-    }
-    if (filters.year !== "all") {
-      items.push({ key: "year", label: "Año", value: `${filters.year}.º` });
-    }
-    return items;
-  }, [filters]);
-
   const changeSort = (key: SortKey) => {
     setSort((current) =>
       current.key === key
@@ -185,7 +157,7 @@ export function DatabaseSection() {
     <Section
       id="base-datos"
       title={<>La muestra, <em>fila por fila</em>.</>}
-      description="Ordena, busca y filtra los registros. Los filtros globales afectan la tabla y todos los análisis del laboratorio."
+      description="Ordena y busca los registros. Los filtros de la barra de muestra (barra lateral) afectan esta tabla y todos los análisis del laboratorio."
       aside={
         <Badge tone={filteredRows.length === sample.n ? "accent" : "warning"}>
           {filteredRows.length} de {sample.n} registros
@@ -203,58 +175,6 @@ export function DatabaseSection() {
             <p className="font-mono text-label uppercase tracking-[0.06em] text-faint">
               Semilla {sample.seed} · {formatDate(sample.generatedAt)} · datos sintéticos
             </p>
-          </div>
-
-          <div className="grid gap-3 border-y border-border py-4 sm:grid-cols-2 xl:grid-cols-4">
-            <SelectField
-              label="Carrera"
-              value={filters.major}
-              onChange={(value) => setFilter("major", value as Major | "all")}
-              options={[
-                { value: "all", label: "Todas las carreras" },
-                ...MAJORS.map((major) => ({ value: major, label: major })),
-              ]}
-            />
-            <SelectField
-              label="Sexo"
-              value={filters.sex}
-              onChange={(value) => setFilter("sex", value as Sex | "all")}
-              options={[
-                { value: "all", label: "Todos" },
-                ...SEXES.map((sex) => ({ value: sex, label: sex })),
-              ]}
-            />
-            <SelectField
-              label="Año académico"
-              value={String(filters.year)}
-              onChange={(value) =>
-                setFilter("year", value === "all" ? "all" : (Number(value) as AcademicYear))
-              }
-              options={[
-                { value: "all", label: "Todos los años" },
-                ...ACADEMIC_YEARS.map((year) => ({ value: String(year), label: `${year}.º año` })),
-              ]}
-            />
-            <div className="flex flex-wrap items-end gap-2">
-              {activeFilterCount === 0 ? (
-                <span className="text-xs text-faint">Sin filtros globales</span>
-              ) : (
-                activeFilters.map((filter) => (
-                  <span key={filter.key} className="lab-chip">
-                    {filter.label}: {filter.value}
-                    <button
-                      type="button"
-                      aria-label={`Quitar filtro ${filter.label}`}
-                      onClick={() => setFilter(filter.key, "all")}
-                      className="text-accent"
-                    >
-                      <X aria-hidden="true" size={11} />
-                    </button>
-                  </span>
-                ))
-              )}
-              {activeFilterCount > 0 ? <ResetFiltersButton onClick={resetFilters} /> : null}
-            </div>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

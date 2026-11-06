@@ -69,7 +69,9 @@ test("filtra la base y actualiza el conteo visible", async () => {
   const database = document.getElementById("base-datos");
   expect(database).toBeTruthy();
 
-  const career = within(database!).getByLabelText("Carrera");
+  // El control de carrera vive en la barra de muestra de la sidebar:
+  // una sola fuente de verdad para toda la app.
+  const career = screen.getByLabelText("Carrera");
   fireEvent.change(career, { target: { value: "Medicina" } });
 
   await waitFor(() => {

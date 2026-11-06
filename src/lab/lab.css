@@ -141,14 +141,19 @@
   gap: 0.55rem;
 }
 
-/* En escritorio la barra vive al pie de la sidebar; en móvil pasa a un bloque
-   horizontal desplazable bajo el header. */
+/* En escritorio la barra vive al pie de la sidebar; en móvil el hook
+   useMediaQuery la monta como franja horizontal bajo el header. */
 .lab-sample-bar--side {
   margin-bottom: var(--space-4);
 }
 
 .lab-sample-bar--top {
-  display: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem clamp(1rem, 3vw, 2.5rem);
 }
 
 .lab-sidebar-footer {
@@ -170,19 +175,22 @@
   min-width: 0;
 }
 
-.lab-header {
+.lab-header-strips {
   position: sticky;
   top: 0;
   z-index: 30;
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.lab-header {
   display: flex;
   min-height: 3.8rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   border-bottom: 1px solid var(--border-strong);
-  background: color-mix(in srgb, var(--bg) 94%, transparent);
   padding: 0.6rem clamp(1rem, 3vw, 2.5rem);
-  backdrop-filter: blur(12px);
 }
 
 .lab-header-actions {
@@ -884,20 +892,6 @@
     display: block;
   }
 
-  .lab-sample-bar--side {
-    display: none;
-  }
-
-  .lab-sample-bar--top {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: end;
-    gap: 0.6rem;
-    border-bottom: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg) 94%, transparent);
-    padding: 0.5rem clamp(1rem, 3vw, 2.5rem);
-  }
-
   .lab-sample-controls {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -973,8 +967,9 @@
     grid-template-columns: 1fr auto;
   }
 
-  .lab-sample-controls {
+  .lab-sample-bar--top .lab-sample-controls {
     grid-column: 1 / -1;
+    grid-row: 2;
     grid-template-columns: 1fr;
   }
 
@@ -1006,7 +1001,7 @@
   }
 
   .lab-sidebar,
-  .lab-header,
+  .lab-header-strips,
   .lab-skip-link,
   .no-print {
     display: none !important;

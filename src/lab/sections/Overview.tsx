@@ -36,25 +36,26 @@ export function Overview() {
           </p>
         </Panel>
 
-        <Callout title="Datos sintéticos con fines educativos">
-          La base no proviene de estudiantes reales: sirve para practicar los procedimientos. Los
-          resultados describen esta muestra y no deben generalizarse a la población universitaria.
-          <p className="mt-3 border-t border-border pt-3">
-            <span className="font-mono text-label uppercase tracking-[0.08em] text-faint">
-              Equipo
-            </span>
-            <ul className="mt-1 space-y-1">
+        <div className="space-y-6">
+          <Callout title="Datos sintéticos con fines educativos">
+            La base no proviene de estudiantes reales: sirve para practicar los procedimientos.
+            Los resultados describen esta muestra y no deben generalizarse a la población
+            universitaria.
+          </Callout>
+
+          <Panel title="Equipo" meta="UNAN-León · 2026">
+            <ul className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
               {GROUP_MEMBERS.map((name) => (
                 <li key={name} className="text-sm text-fg">
                   {name}
                 </li>
               ))}
             </ul>
-            <p className="mt-2 font-mono text-label uppercase tracking-[0.08em] text-faint">
+            <p className="mt-3 border-t border-border pt-3 font-mono text-label uppercase tracking-[0.08em] text-faint">
               Estadística Introductoria · Ingeniería en Sistemas
             </p>
-          </p>
-        </Callout>
+          </Panel>
+        </div>
       </div>
     </Section>
   );
