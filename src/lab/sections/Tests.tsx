@@ -45,7 +45,7 @@ import {
 
 function cramersStrength(value: number | null): string {
   if (value === null || !Number.isFinite(value)) return "No calculable";
-  if (value < 0.1) return "Asociación negligible";
+  if (value < 0.1) return "Asociación mínima";
   if (value < 0.3) return "Asociación baja";
   if (value < 0.5) return "Asociación moderada";
   return "Asociación alta";

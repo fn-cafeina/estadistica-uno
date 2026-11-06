@@ -9,7 +9,6 @@ describe("distribuciones de frecuencia", () => {
     });
 
     expect(result.total).toBe(5);
-    expect(result.hasCumulative).toBe(true);
     expect(result.rows).toHaveLength(3);
     expect(result.rows[0]).toMatchObject({
       value: "A",

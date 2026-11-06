@@ -12,7 +12,6 @@ export interface FrequencyRow {
 export interface CategoricalFrequencyResult {
   rows: FrequencyRow[];
   total: number;
-  hasCumulative: boolean;
 }
 
 export interface GroupedFrequencyRow {
@@ -75,7 +74,7 @@ export function categoricalFrequency(
     };
   });
 
-  return { rows, total, hasCumulative: Boolean(options.order) };
+  return { rows, total };
 }
 
 export function sturgesBins(n: number): number {
@@ -147,12 +146,4 @@ export function groupedFrequency(values: readonly NumericValue[], requestedBins?
   }
 
   return { rows, total, min, max, range, k, width, constant: false };
-}
-
-export function percentOf(count: number, total: number): number {
-  return total > 0 ? (count / total) * 100 : 0;
-}
-
-export function relativeOf(count: number, total: number): number {
-  return total > 0 ? count / total : 0;
 }

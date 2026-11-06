@@ -8,11 +8,6 @@ export function formatNumber(value: number | null | undefined, digits = 1): stri
   }).format(value);
 }
 
-export function formatInteger(value: number | null | undefined): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
-  return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(value);
-}
-
 export function formatPercent(value: number | null | undefined, digits = 1): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
   return `${formatNumber(value, digits)}%`;
@@ -32,33 +27,17 @@ export function formatDate(iso: string | null | undefined): string {
   return new Intl.DateTimeFormat(LOCALE, { dateStyle: "medium", timeZone: "UTC" }).format(date);
 }
 
-export function formatUnit(value: number | null | undefined, unit: string | null, digits = 1): string {
-  const formatted = formatNumber(value, digits);
-  return unit && formatted !== "s/d" ? `${formatted} ${unit}` : formatted;
-}
-
 export function formatInterval(lower: number, upper: number, digits = 1): string {
   return `${formatNumber(lower, digits)} a ${formatNumber(upper, digits)}`;
 }
 
-export function formatSigned(value: number | null | undefined, digits = 2): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return "s/d";
-  const formatted = formatNumber(value, digits);
-  return value > 0 ? `+${formatted}` : formatted;
-}
-
 export function formatEquation(slope: number, intercept: number, xLabel: string, yLabel: string): string {
   // El signo del término de pendiente depende de la pendiente, no del intercepto.
-  const sign = slope < 0 ? "−" : "+";
-  return `${yLabel} = ${formatNumber(intercept, 2)} ${sign} ${formatNumber(Math.abs(slope), 3)} · ${xLabel}`;
+  return `${yLabel} = ${formatNumber(intercept, 2)} ${slope < 0 ? "−" : "+"} ${formatNumber(Math.abs(slope), 3)} · ${xLabel}`;
 }
 
 export function pluralize(count: number, singular: string, plural: string): string {
   return count === 1 ? singular : plural;
-}
-
-export function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
 }
 
 export function pDecision(pValue: number | null | undefined, alpha: number): "rechazar" | "no rechazar" | "indeterminada" {
@@ -80,8 +59,4 @@ export function correlationText(r: number, strength: string, direction: string):
     return `La relación es ${strength} y ${direction}. En términos prácticos, la nube de puntos se parece más a una nube sin patrón lineal claro que a una recta.`;
   }
   return `La relación es ${strength} y ${direction}. El signo indica la dirección y el valor absoluto, la cercanía a una línea recta.`;
-}
-
-export function truncate(value: string, maxLength: number): string {
-  return value.length <= maxLength ? value : `${value.slice(0, maxLength - 1)}…`;
 }

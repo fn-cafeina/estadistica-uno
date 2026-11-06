@@ -195,43 +195,6 @@ export function SelectField({
   );
 }
 
-export function TextField({
-  label,
-  value,
-  onChange,
-  placeholder,
-  type = "text",
-  inputMode,
-  hint,
-  className,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  type?: "text" | "search" | "number";
-  inputMode?: "text" | "decimal" | "numeric";
-  hint?: string;
-  className?: string;
-}) {
-  const id = useId();
-  return (
-    <label className={cn("block", className)} htmlFor={id}>
-      <span className="lab-form-label">{label}</span>
-      <input
-        id={id}
-        type={type}
-        inputMode={inputMode}
-        className="lab-field"
-        value={value}
-        placeholder={placeholder}
-        onChange={(event) => onChange(event.target.value)}
-      />
-      {hint ? <span className="lab-form-hint">{hint}</span> : null}
-    </label>
-  );
-}
-
 export function SegmentedControl<T extends string>({
   value,
   onChange,

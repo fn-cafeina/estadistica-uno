@@ -265,7 +265,7 @@ export function DatabaseSection() {
                 <input
                   type="search"
                   className="lab-field"
-                  placeholder="Nombre, carrera, valor..."
+                  placeholder="Carrera, dispositivo, valor..."
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
