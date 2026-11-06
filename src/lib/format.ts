@@ -47,7 +47,8 @@ export function formatSigned(value: number | null | undefined, digits = 2): stri
 }
 
 export function formatEquation(slope: number, intercept: number, xLabel: string, yLabel: string): string {
-  const sign = intercept >= 0 ? "+" : "−";
+  // El signo del término de pendiente depende de la pendiente, no del intercepto.
+  const sign = slope < 0 ? "−" : "+";
   return `${yLabel} = ${formatNumber(intercept, 2)} ${sign} ${formatNumber(Math.abs(slope), 3)} · ${xLabel}`;
 }
 
