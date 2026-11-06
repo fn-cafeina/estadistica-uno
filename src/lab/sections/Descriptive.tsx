@@ -195,7 +195,6 @@ export function Descriptive() {
             </TableWrap>
           </Panel>
 
-          <div className="lab-grid lab-grid-2">
             <Interpretation>
               <p>
                 En esta muestra, <strong className="text-fg">{variable.label}</strong> tiene una media
@@ -205,13 +204,12 @@ export function Descriptive() {
                 {formatNumber(summary.min, 1)} a {formatNumber(summary.max, 1)}. El 50% central está
                 entre Q1 = {formatNumber(summary.q1, 1)} y Q3 = {formatNumber(summary.q3, 1)}.
               </p>
+              <p>
+                La media usa todos los valores y es sensible a los extremos; la mediana y el IQR
+                resisten mejor los atípicos. Si se separan mucho, conviene revisar la forma de la
+                distribución y los valores extremos.
+              </p>
             </Interpretation>
-            <Callout title="Media, mediana y valores extremos" tone="warning">
-              La media usa todos los valores y es sensible a los extremos. La mediana y el IQR resisten
-              mejor los atípicos. Si la media y la mediana se separan mucho, conviene revisar la forma
-              de la distribución y los valores extremos.
-            </Callout>
-          </div>
         </div>
       )}
     </Section>

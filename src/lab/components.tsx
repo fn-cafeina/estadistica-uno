@@ -318,15 +318,6 @@ export function DataDetails({ children, label = "Ver datos" }: { children: React
   );
 }
 
-export function KeyValue({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-border py-2 last:border-0">
-      <dt className="text-xs text-muted">{label}</dt>
-      <dd className="text-right text-sm font-semibold text-fg">{value}</dd>
-    </div>
-  );
-}
-
 export function ProcedureTabs({
   section,
   active,

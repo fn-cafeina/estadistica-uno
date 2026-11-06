@@ -1,13 +1,8 @@
-import { Info } from "lucide-react";
 import { QUESTIONNAIRE, PERFORMANCE_VARIABLE } from "../../data/schema";
-import { formatDate } from "../../lib/format";
-import { useLab } from "../LabContext";
 import { TYPE_LABELS } from "../navigation";
-import { Section, Panel, Badge, Callout, KeyValue, TableWrap } from "../components";
+import { Section, Panel, Badge, TableWrap } from "../components";
 
 export function Questionnaire() {
-  const { sample } = useLab();
-
   return (
     <Section
       id="cuestionario"
@@ -53,24 +48,6 @@ export function Questionnaire() {
         </Panel>
 
         <div className="space-y-6">
-          <Panel title="Ficha de la muestra" meta="Sintética">
-            <dl>
-              <KeyValue label="Registros" value={sample.n} />
-              <KeyValue label="Semilla" value={<code className="text-xs">{sample.seed}</code>} />
-              <KeyValue label="Generada" value={formatDate(sample.generatedAt)} />
-              <KeyValue label="Origen" value="Datos sintéticos" />
-            </dl>
-            <p className="mt-3 text-[0.7rem] leading-relaxed text-faint">
-              La muestra es fija: se genera una sola vez con esta semilla y no se regenera, para
-              que la web, la impresión y los documentos siempre muestren los mismos datos.
-            </p>
-          </Panel>
-
-          <Callout title="Instrumento de referencia" icon={Info}>
-            La base ya viene cargada. Las preguntas no se responden en la aplicación: sirven para
-            entender qué se midió y cómo se codificó cada variable.
-          </Callout>
-
           <Panel title="Variable derivada" meta="Para chi-cuadrado">
             <p className="text-xs leading-relaxed text-muted">
               El nivel de rendimiento se calcula desde el promedio académico:

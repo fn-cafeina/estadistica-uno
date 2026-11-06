@@ -228,17 +228,23 @@ export function Frequencies() {
         </div>
       )}
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <Callout title="f y fr">
-          <p>La frecuencia absoluta cuenta casos. La relativa los divide por n y permite comparar muestras de distinto tamaño.</p>
-        </Callout>
-        <Callout title="Porcentaje">
-          <p>Es la frecuencia relativa multiplicada por 100. Por redondeo, la suma puede no dar exactamente 100.</p>
-        </Callout>
-        <Callout title="Acumuladas">
-          <p>F y F% solo se interpretan cuando la variable tiene orden. En una nominal, acumular no tiene sentido.</p>
-        </Callout>
-      </div>
+      <details className="lab-details mt-4">
+        <summary>¿Qué significan estas columnas?</summary>
+        <div className="lab-details-content space-y-3">
+          <p>
+            <strong className="text-fg">f y fr.</strong> La frecuencia absoluta cuenta casos. La
+            relativa los divide por n y permite comparar muestras de distinto tamaño.
+          </p>
+          <p>
+            <strong className="text-fg">Porcentaje.</strong> Es la frecuencia relativa multiplicada
+            por 100. Por redondeo, la suma puede no dar exactamente 100.
+          </p>
+          <p>
+            <strong className="text-fg">Acumuladas.</strong> F y F% solo se interpretan cuando la
+            variable tiene orden. En una nominal, acumular no tiene sentido.
+          </p>
+        </div>
+      </details>
 
       <div className="mt-4 flex items-center gap-2 text-faint">
         <SlidersHorizontal aria-hidden="true" size={13} />

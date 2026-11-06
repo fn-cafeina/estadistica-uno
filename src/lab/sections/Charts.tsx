@@ -409,16 +409,21 @@ export function Charts({ procedure }: { procedure: string | null }) {
           </ChartCard>
 
           <div className="lab-procedure" data-active={active === "dispersion"}>
-            <div className="grid gap-3 lg:grid-cols-2">
-              <Callout title="Los ejes importan" icon={Info}>
-                Revisa las unidades y el rango de los ejes antes de comparar. Una escala distinta puede
-                hacer que la misma diferencia parezca grande o pequeña.
-              </Callout>
-              <Callout title="Asociación visual" tone="warning">
-                Una nube de puntos o una recta no prueban causalidad. Solo muestran cómo se mueven dos
-                variables en esta muestra.
-              </Callout>
-            </div>
+            <details className="lab-details">
+              <summary>Levantar la nube</summary>
+              <div className="lab-details-content space-y-3">
+                <p>
+                  <strong className="text-fg">Los ejes importan.</strong> Revisa las unidades y el
+                  rango de los ejes antes de comparar. Una escala distinta puede hacer que la misma
+                  diferencia parezca grande o pequeña.
+                </p>
+                <p>
+                  <strong className="text-fg">Asociación visual.</strong> Una nube de puntos o una
+                  recta no prueban causalidad: solo muestran cómo se mueven dos variables en esta
+                  muestra.
+                </p>
+              </div>
+            </details>
           </div>
         </div>
       )}
