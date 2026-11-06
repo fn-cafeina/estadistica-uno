@@ -102,7 +102,7 @@ function SampleBar({ placement }: { placement: "side" | "top" }) {
 }
 
 export function Lab() {
-  const { sample, filteredRows, exportCsv } = useLab();
+  const { sample, exportCsv } = useLab();
   const { section, procedure } = useActiveSection();
   // La barra de muestra vive en la sidebar en escritorio y bajo el header en
   // móvil; solo una instancia montada a la vez para no duplicar controles.
