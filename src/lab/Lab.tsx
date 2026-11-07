@@ -1,5 +1,5 @@
-import { useEffect, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, Download, Printer } from "lucide-react";
+import { useEffect, useId, useState, type ReactNode } from "react";
+import { ChevronLeft, ChevronRight, Download, Filter, Printer } from "lucide-react";
 import { useLab } from "./LabContext";
 import { NAV_ITEMS, PROCEDURES, procedureLabel } from "./navigation";
 import { useActiveSection, parseLocation } from "./useActiveSection";
@@ -12,7 +12,7 @@ import { Descriptive } from "./sections/Descriptive";
 import { Tests } from "./sections/Tests";
 import { Charts } from "./sections/Charts";
 import { InterpretationSection } from "./sections/InterpretationSection";
-import { IconButton, SelectField, ResetFiltersButton } from "./components";
+import { Button, IconButton, SelectField, ResetFiltersButton } from "./components";
 import {
   ACADEMIC_YEARS,
   MAJORS,
@@ -57,15 +57,39 @@ function stopIndex(section: string, procedure: string | null): number {
 // análisis y gráficos) refleja lo que se filtra en esta barra.
 function SampleBar({ placement }: { placement: "side" | "top" }) {
   const { sample, filteredRows, filters, activeFilterCount, setFilter, resetFilters } = useLab();
+  // En el teléfono la franja fija no puede costar medio viewport: los tres
+  // selects van plegados tras un botón y solo se abren cuando hace falta.
+  const isPhone = useMediaQuery("(max-width: 640px)");
+  const collapsible = placement === "top" && isPhone;
+  const [open, setOpen] = useState(false);
+  const controlsId = useId();
+  const expanded = !collapsible || open;
   return (
     <div className={`lab-sample-bar lab-sample-bar--${placement}`}>
-      <p className="lab-sample-readout" aria-live="polite">
-        <span className="lab-sample-readout-label">Muestra</span>
-        <span className="lab-sample-readout-value">
-          n = {filteredRows.length}/{sample.n}
-        </span>
-      </p>
-      <div className="lab-sample-controls">
+      <div className="lab-sample-head">
+        <p className="lab-sample-readout" aria-live="polite">
+          <span className="lab-sample-readout-label">Muestra</span>
+          <span className="lab-sample-readout-value">
+            n = {filteredRows.length}/{sample.n}
+          </span>
+        </p>
+        {collapsible || activeFilterCount > 0 ? (
+          <div className="lab-sample-actions">
+            {collapsible ? (
+              <Button
+                icon={Filter}
+                aria-expanded={expanded}
+                aria-controls={controlsId}
+                onClick={() => setOpen((value) => !value)}
+              >
+                Filtros{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+              </Button>
+            ) : null}
+            {activeFilterCount > 0 ? <ResetFiltersButton onClick={resetFilters} /> : null}
+          </div>
+        ) : null}
+      </div>
+      <div className="lab-sample-controls" id={controlsId} hidden={!expanded}>
         <SelectField
           label="Carrera"
           value={filters.major}
@@ -96,7 +120,6 @@ function SampleBar({ placement }: { placement: "side" | "top" }) {
           ]}
         />
       </div>
-      {activeFilterCount > 0 ? <ResetFiltersButton onClick={resetFilters} /> : null}
     </div>
   );
 }

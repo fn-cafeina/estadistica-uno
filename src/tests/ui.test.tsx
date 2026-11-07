@@ -92,6 +92,32 @@ test("la muestra es fija: no existe botón de regeneración", () => {
   expect(footer).toContain(`semilla ${DEFAULT_SEED}`);
 });
 
+test("en el teléfono los filtros van plegados tras un botón", () => {
+  const originalMatchMedia = window.matchMedia;
+  // El hook lee la ventana real: se simula un viewport de teléfono.
+  window.matchMedia = ((query: string) => ({
+    matches: query === "(max-width: 640px)",
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  })) as unknown as typeof window.matchMedia;
+
+  try {
+    render(<App />);
+
+    const toggle = screen.getByRole("button", { name: /^filtros/i }) as HTMLButtonElement;
+    const controls = document.getElementById(toggle.getAttribute("aria-controls") ?? "");
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    expect(controls?.hasAttribute("hidden")).toBe(true);
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(controls?.hasAttribute("hidden")).toBe(false);
+  } finally {
+    window.matchMedia = originalMatchMedia;
+  }
+});
+
 test("muestra frecuencias, descriptiva, pruebas y gráficos", async () => {
   render(<App />);
 

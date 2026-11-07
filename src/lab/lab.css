@@ -120,6 +120,23 @@
   padding: 0.4rem 0.6rem;
 }
 
+.lab-sample-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.lab-sample-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.lab-sample-bar--top .lab-sample-actions {
+  margin-left: auto;
+}
+
 .lab-sample-readout-label {
   color: var(--faint);
   font-family: var(--font-mono);
@@ -141,16 +158,22 @@
   gap: 0.55rem;
 }
 
+/* Los selectores siguen montados con el attribute hidden para conservar su
+   estado; la clase de arriba ganaría al hidden del user agent. */
+.lab-sample-controls[hidden] {
+  display: none;
+}
+
 /* En escritorio la barra vive al pie de la sidebar; en móvil el hook
-   useMediaQuery la monta como franja horizontal bajo el header. */
+   useMediaQuery la monta como franja horizontal bajo el header. En el
+   teléfono esa franja lleva los selects plegados tras un botón, para que
+   fijada no coma medio viewport. */
 .lab-sample-bar--side {
   margin-bottom: var(--space-4);
 }
 
 .lab-sample-bar--top {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: end;
   gap: 0.6rem;
   border-bottom: 1px solid var(--border);
   padding: 0.5rem clamp(1rem, 3vw, 2.5rem);
@@ -984,13 +1007,7 @@
     display: none;
   }
 
-  .lab-sample-bar--top {
-    grid-template-columns: 1fr auto;
-  }
-
   .lab-sample-bar--top .lab-sample-controls {
-    grid-column: 1 / -1;
-    grid-row: 2;
     grid-template-columns: 1fr;
   }
 
