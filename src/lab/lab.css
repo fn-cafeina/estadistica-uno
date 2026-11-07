@@ -1061,6 +1061,16 @@
     display: none;
   }
 
+  /* La cabecera de la barra ocupa dos filas fijas en el teléfono: readout
+     arriba y botones abajo. En una sola fila el readout, "Filtros (1)" y
+     "Limpiar filtros" suman más ancho del disponible, así que al filtrar la
+     acción se envolvía a una segunda fila y la franja crecía 41px justo
+     cuando el usuario aplicaba un filtro, empujando el contenido. */
+  .lab-sample-bar--top .lab-sample-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .lab-sample-bar--top .lab-sample-controls {
     grid-template-columns: 1fr;
   }
