@@ -434,8 +434,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* La primera columna lleva el contenido principal y la segunda el complemento:
+   las fracciones siguen el peso del contenido, no al revés. */
 .lab-grid-sidebar {
-  grid-template-columns: minmax(0, 0.36fr) minmax(0, 0.64fr);
+  grid-template-columns: minmax(0, 0.64fr) minmax(0, 0.36fr);
   align-items: start;
 }
 
@@ -762,6 +764,57 @@
 
 .lab-table tr:last-child td {
   border-bottom: 0;
+}
+
+/* Cinco columnas en un teléfono de 360px solo consiguen scroll horizontal y
+   filas altas: la tabla del cuestionario se apila en dos bloques por fila,
+   número con la pregunta y, debajo, la metadata. */
+@media (max-width: 640px) {
+  .lab-table-questionnaire thead {
+    display: none;
+  }
+
+  .lab-table-questionnaire tbody,
+  .lab-table-questionnaire tr {
+    display: block;
+  }
+
+  .lab-table-questionnaire tr {
+    border-bottom: 1px solid var(--border);
+    padding: 0.65rem 0;
+  }
+
+  .lab-table-questionnaire tr:last-child {
+    border-bottom: 0;
+  }
+
+  .lab-table-questionnaire td {
+    display: inline;
+    border: 0;
+    padding: 0;
+  }
+
+  .lab-table-questionnaire td:first-child {
+    display: inline-block;
+    margin-right: 0.35rem;
+    vertical-align: top;
+  }
+
+  /* Salto de línea antes de la metadata sin tocar el marcado. */
+  .lab-table-questionnaire td:nth-child(3)::before {
+    content: "\A";
+    white-space: pre;
+  }
+
+  .lab-table-questionnaire td:nth-child(4)::before {
+    content: "·";
+    margin: 0 0.3rem;
+  }
+
+  .lab-table-questionnaire td:nth-child(5) {
+    display: block;
+    margin-top: 0.15rem;
+  }
 }
 
 .lab-table .num,
