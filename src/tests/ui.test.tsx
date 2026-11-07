@@ -198,3 +198,18 @@ test("incluye la síntesis y el botón de impresión", async () => {
   expect(screen.getAllByRole("button", { name: /imprimir reporte/i }).length).toBeGreaterThan(0);
   expect(screen.getAllByText(/lo que no se puede concluir/i).length).toBeGreaterThan(0);
 });
+
+// Va la última del archivo: happy-dom despacha el "hashchange" en un turno
+// posterior al cambio de hash y ese turno debe caer sin componentes montados.
+// Si corre antes, React encola trabajo fuera de act que sobrevive al desmonte
+// del entorno y rompe la suite con "window is not defined".
+test("los chevrones del header cambian de estación", () => {
+  render(<App />);
+
+  const previous = screen.getByRole("button", { name: "Estación anterior" }) as HTMLButtonElement;
+  const next = screen.getByRole("button", { name: "Estación siguiente" }) as HTMLButtonElement;
+  expect(previous.disabled).toBe(true);
+
+  fireEvent.click(next);
+  expect(window.location.hash).toBe("#cuestionario");
+});

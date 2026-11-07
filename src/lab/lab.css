@@ -217,6 +217,7 @@
 }
 
 .lab-station-name {
+  flex: 1 1 auto;
   color: var(--text);
   font-family: var(--font-display);
   font-size: var(--fs-subtitle);
@@ -948,19 +949,39 @@
   }
 }
 
+@media (max-width: 400px) {
+  .lab-station-index {
+    display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .lab-icon-button {
+    height: 2.75rem;
+    width: 2.75rem;
+  }
+
+  .lab-button {
+    min-height: 2.75rem;
+  }
+}
+
 @media (max-width: 640px) {
   .lab-header {
     align-items: center;
     gap: 0.5rem;
   }
 
-  .lab-header-actions {
-    width: 100%;
-    justify-content: flex-end;
+  /* La estación ocupa el hueco y las acciones quedan a su ancho real. Si las
+     dos pidieran el 100% sin envolver, la estación colapsaría a ancho 0 y la
+     caja de acciones taparía los chevrones: se ven, pero los toques caen en
+     la caja vacía. */
+  .lab-station {
+    flex: 1 1 auto;
   }
 
-  .lab-station {
-    width: 100%;
+  .lab-station-index-word {
+    display: none;
   }
 
   .lab-sample-bar--top {

@@ -226,7 +226,8 @@ export function Lab() {
           <div className="lab-header">
             <div className="lab-station">
               <span className="lab-station-index">
-                Estación {String(sectionIndex + 1).padStart(2, "0")}/
+                <span className="lab-station-index-word">{"Estación "}</span>
+                {String(sectionIndex + 1).padStart(2, "0")}/
                 {String(NAV_ITEMS.length).padStart(2, "0")}
               </span>
               <span className="lab-station-name">{stationName}</span>
