@@ -867,10 +867,11 @@
   color: var(--accent);
 }
 
+/* El tamaño de texto lo pone charts.tsx en el <svg>: depende del ancho real
+   del lienzo, que aquí en CSS no se conoce. */
 .lab-axis-label {
   fill: var(--muted);
   font-family: var(--font-mono);
-  font-size: 10px;
   letter-spacing: 0.01em;
 }
 

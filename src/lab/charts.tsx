@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { DescriptiveSummary } from "../stats/descriptive";
 import type { FrequencyRow, GroupedFrequencyRow } from "../stats/frequency";
 import type { RegressionResult } from "../stats/regression";
@@ -12,6 +12,79 @@ const CHART_COLORS = [
   "var(--chart-4)",
   "var(--chart-5)",
 ];
+
+// El viewBox de todos los gráficos mide 800 y el SVG se estira al contenedor,
+// así que una fuente fija de 10px cae a ~4px en un teléfono y ~6px en
+// escritorio. Cada tramo de ancho de lienzo lleva su tamaño para que las
+// etiquetas ronden 11-13px en pantalla.
+const FONT_TIERS: ReadonlyArray<readonly [maxWidth: number, font: number]> = [
+  [369, 30],
+  [509, 22],
+  [699, 16],
+  [949, 11.5],
+  [Infinity, 10],
+];
+
+function fontForWidth(width: number): number {
+  for (const [maxWidth, font] of FONT_TIERS) {
+    if (width <= maxWidth) return font;
+  }
+  return 10;
+}
+
+// Estimación inicial del ancho del lienzo; el ResizeObserver la corrige en
+// cuanto el SVG se coloca en la página.
+function estimateCanvasWidth(): number {
+  if (typeof window === "undefined") return 800;
+  const viewport = window.innerWidth || 800;
+  return Math.max(240, Math.min(viewport, 1180) - (viewport >= 1024 ? 700 : 61));
+}
+
+/** Ancho aproximado de un texto (0.6em por carácter) en unidades del viewBox. */
+function textWidth(text: string, font: number): number {
+  return text.length * 0.6 * font;
+}
+
+/** Paso para mostrar una de cada n marcas cuando las etiquetas no caben. */
+function tickStride(labelWidth: number, spacing: number): number {
+  if (spacing <= 0) return 1;
+  return Math.max(1, Math.ceil((labelWidth * 1.2) / spacing));
+}
+
+/** Grosor de los ejes: a fuente grande un trazo de 1 unidad desaparece. */
+function hairline(font: number): number {
+  return Math.max(1, font * 0.09);
+}
+
+type ChartBox = {
+  /** Se engancha al <svg>: su ancho real fija el tamaño de texto. */
+  svgRef: (node: SVGSVGElement | null) => void;
+  /** Tamaño de texto en unidades del viewBox. */
+  font: number;
+};
+
+function useChartBox(): ChartBox {
+  const [font, setFont] = useState(() => fontForWidth(estimateCanvasWidth()));
+  const observer = useRef<ResizeObserver | null>(null);
+
+  useEffect(() => () => observer.current?.disconnect(), []);
+
+  const svgRef = useCallback((node: SVGSVGElement | null) => {
+    observer.current?.disconnect();
+    observer.current = null;
+    if (!node || typeof ResizeObserver === "undefined") return;
+    const resize = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? 0;
+      if (width <= 0) return;
+      const next = fontForWidth(width);
+      setFont((current) => (current === next ? current : next));
+    });
+    resize.observe(node);
+    observer.current = resize;
+  }, []);
+
+  return { svgRef, font };
+}
 
 export function ChartCard({
   title,
@@ -57,49 +130,58 @@ export function BarChart({
   label: string;
   ariaLabel: string;
 }) {
+  const { svgRef, font } = useChartBox();
   if (rows.length === 0) return <ChartEmpty />;
   const max = Math.max(1, ...rows.map((row) => row.count));
-  const rowHeight = 34;
-  const height = rows.length * rowHeight + 54;
-  const labelX = 160;
-  const barX = 174;
-  const barMax = 548;
+  const labelLine = Math.round(font * 1.35);
+  const barHeight = Math.max(22, Math.round(font * 0.9));
+  const rowHeight = labelLine + barHeight + 16;
+  const values = rows.map((row) => `${row.count} (${formatPercent(row.percent, 1)})`);
+  const valueWidth = Math.max(0, ...values.map((value) => textWidth(value, font)));
+  const barMax = Math.max(80, 800 - valueWidth - 8);
+  const height = 10 + rows.length * rowHeight + 30;
 
   return (
-    <svg viewBox={`0 0 800 ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg
+      ref={svgRef}
+      style={{ fontSize: font }}
+      viewBox={`0 0 800 ${height}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <title>{ariaLabel}</title>
       {rows.map((row, index) => {
-        const y = 20 + index * rowHeight;
+        const top = 6 + index * rowHeight;
+        const barY = top + labelLine;
         const width = (row.count / max) * barMax;
         return (
           <g key={row.value}>
-            <text x={labelX} y={y + 17} textAnchor="end" className="lab-axis-label">
+            {/* La categoría va sobre la barra: a la izquierda no caben nombres
+                largos cuando la fuente crece. */}
+            <text x={0} y={top + labelLine * 0.82} className="lab-axis-label">
               {row.value}
             </text>
+            <rect x={0} y={barY} width={barMax} height={barHeight} fill="var(--grid)" opacity="0.45" />
             <rect
-              x={barX}
-              y={y}
-              width={barMax}
-              height={22}
-              fill="var(--grid)"
-              opacity="0.45"
-            />
-            <rect
-              x={barX}
-              y={y}
+              x={0}
+              y={barY}
               width={Math.max(2, width)}
-              height={22}
+              height={barHeight}
               fill={CHART_COLORS[index % CHART_COLORS.length]}
               opacity="0.82"
             />
-            <text x={barX + width + 6} y={y + 16} className="lab-axis-label">
-              {row.count} ({formatPercent(row.percent, 1)})
+            <text
+              x={Math.max(2, width) + 6}
+              y={barY + barHeight / 2 + font * 0.35}
+              className="lab-axis-label"
+            >
+              {values[index] ?? ""}
             </text>
           </g>
         );
       })}
-      <line x1={barX} x2={barX} y1="10" y2={height - 38} stroke="var(--border-strong)" />
-      <text x={barX} y={height - 10} className="lab-axis-label">
+      <text x={0} y={height - 8} className="lab-axis-label">
         {label}
       </text>
     </svg>
@@ -119,16 +201,17 @@ export function HistogramChart({
   unit: string | null;
   ariaLabel: string;
 }) {
+  const { svgRef, font } = useChartBox();
   if (rows.length === 0) return <ChartEmpty />;
   const width = 800;
   const height = 360;
-  const left = 58;
+  const maxCount = Math.max(1, ...rows.map((row) => row.count));
+  const left = Math.max(58, 16 + String(maxCount).length * 0.6 * font);
   const right = 20;
   const top = 28;
   const bottom = 62;
   const plotWidth = width - left - right;
   const plotHeight = height - top - bottom;
-  const maxCount = Math.max(1, ...rows.map((row) => row.count));
   const barWidth = plotWidth / rows.length;
   const min = rows[0]?.lower ?? 0;
   const max = rows[rows.length - 1]?.upper ?? 1;
@@ -138,9 +221,20 @@ export function HistogramChart({
   const polygonPoints = rows
     .map((row, index) => `${left + index * barWidth + barWidth / 2},${y(row.count)}`)
     .join(" ");
+  const xLabels = rows.map((row) => formatNumber(row.lower, 1));
+  const labelWidth = Math.max(0, ...xLabels.map((value) => textWidth(value, font)));
+  const stride = tickStride(labelWidth, barWidth);
+  const meanOnRight = meanX !== null && meanX > left + plotWidth * 0.6;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg
+      ref={svgRef}
+      style={{ fontSize: font }}
+      viewBox={`0 0 ${width} ${height}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <title>{ariaLabel}</title>
       <desc>
         Histograma de {label} con polígono de frecuencias. Barras para la frecuencia absoluta y
@@ -172,14 +266,16 @@ export function HistogramChart({
               stroke="var(--accent)"
               strokeOpacity="0.55"
             />
-            <text
-              x={left + index * barWidth + barWidth / 2}
-              y={height - 38}
-              textAnchor="middle"
-              className="lab-axis-label"
-            >
-              {formatNumber(row.lower, 1)}
-            </text>
+            {index % stride === 0 ? (
+              <text
+                x={left + index * barWidth + barWidth / 2}
+                y={height - 38}
+                textAnchor="middle"
+                className="lab-axis-label"
+              >
+                {xLabels[index] ?? ""}
+              </text>
+            ) : null}
             <title>
               {formatInterval(row.lower, row.upper)}: {row.count} casos
             </title>
@@ -190,7 +286,7 @@ export function HistogramChart({
         points={polygonPoints}
         fill="none"
         stroke="var(--accent-2)"
-        strokeWidth="2"
+        strokeWidth={Math.max(2, font * 0.13)}
         strokeOpacity="0.9"
       />
       {rows.map((row, index) => (
@@ -198,7 +294,7 @@ export function HistogramChart({
           key={`point-${row.lower}-${row.upper}`}
           cx={left + index * barWidth + barWidth / 2}
           cy={y(row.count)}
-          r="3.2"
+          r={Math.max(3.2, font * 0.2)}
           fill="var(--accent-2)"
         />
       ))}
@@ -211,8 +307,14 @@ export function HistogramChart({
             y2={top + plotHeight}
             stroke="var(--warning)"
             strokeDasharray="4 4"
+            strokeWidth={hairline(font) * 1.4}
           />
-          <text x={meanX + 5} y={top + 10} className="lab-axis-label">
+          <text
+            x={meanX + (meanOnRight ? -5 : 5)}
+            y={top + 12}
+            textAnchor={meanOnRight ? "end" : "start"}
+            className="lab-axis-label"
+          >
             media {formatNumber(mean, 1)}
           </text>
         </g>
@@ -223,13 +325,11 @@ export function HistogramChart({
         y1={top + plotHeight}
         y2={top + plotHeight}
         stroke="var(--border-strong)"
+        strokeWidth={hairline(font)}
       />
       <text x={left} y={height - 10} className="lab-axis-label">
         {label}
         {unit ? ` (${unit})` : ""}
-      </text>
-      <text x={width - right} y={top + 12} textAnchor="end" className="lab-axis-label">
-        Barras: frecuencia · Línea: polígono
       </text>
     </svg>
   );
@@ -244,14 +344,18 @@ export function PieChart({
   label: string;
   ariaLabel: string;
 }) {
+  const { svgRef, font } = useChartBox();
   const total = rows.reduce((sum, row) => sum + row.count, 0);
   if (total === 0) return <ChartEmpty />;
   const width = 800;
-  const height = 360;
-  const cx = 245;
-  const cy = 175;
   const outer = 125;
   const inner = 70;
+  const cx = 400;
+  const cy = outer + 20;
+  const legendTop = cy + outer + 30;
+  const legendRow = Math.max(28, Math.round(font * 1.55));
+  const chip = Math.max(12, Math.round(font * 0.9));
+  const height = legendTop + rows.length * legendRow + 16;
   let angle = -Math.PI / 2;
   const slices = rows.map((row, index) => {
     const start = angle;
@@ -261,7 +365,14 @@ export function PieChart({
   });
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg
+      ref={svgRef}
+      style={{ fontSize: font }}
+      viewBox={`0 0 ${width} ${height}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <title>{ariaLabel}</title>
       <desc>Composición porcentual de {label}.</desc>
       {slices.length === 1 ? (
@@ -284,27 +395,38 @@ export function PieChart({
           </path>
         ))
       )}
-      <text x={cx} y={cy - 4} textAnchor="middle" fontFamily="var(--font-display)" fontSize="28" fill="var(--text)">
+      <text
+        x={cx}
+        y={cy - font * 0.4}
+        textAnchor="middle"
+        fontFamily="var(--font-display)"
+        fontSize={font * 2.6}
+        fill="var(--text)"
+      >
         {total}
       </text>
-      <text x={cx} y={cy + 16} textAnchor="middle" className="lab-axis-label">
-        estudiantes
-      </text>
+      {font <= 16 ? (
+        <text x={cx} y={cy + font * 1.6} textAnchor="middle" className="lab-axis-label">
+          estudiantes
+        </text>
+      ) : null}
+      {/* La leyenda vive debajo del anillo: a un lado, los nombres largos se
+          salen del lienzo cuando la fuente crece. */}
       {rows.map((row, index) => {
-        const y = 64 + index * 34;
+        const y = legendTop + index * legendRow;
         return (
           <g key={`legend-${row.value}`}>
             <rect
-              x={445}
-              y={y - 12}
-              width={12}
-              height={12}
+              x={8}
+              y={y - chip * 0.85}
+              width={chip}
+              height={chip}
               fill={CHART_COLORS[index % CHART_COLORS.length]}
             />
-            <text x={465} y={y - 2} className="lab-axis-label">
+            <text x={8 + chip + 8} y={y} className="lab-axis-label">
               {row.value}
             </text>
-            <text x={770} y={y - 2} textAnchor="end" className="lab-axis-label">
+            <text x={792} y={y} textAnchor="end" className="lab-axis-label">
               {row.count} · {formatPercent(row.percent, 1)}
             </text>
           </g>
@@ -331,33 +453,58 @@ export function ScatterChart({
   yUnit?: string | null;
   ariaLabel: string;
 }) {
+  const { svgRef, font } = useChartBox();
   if (points.length < 3 || !regression) return <ChartEmpty />;
   const width = 800;
   const height = 400;
-  const left = 64;
   const right = 22;
-  const top = 24;
+  const top = Math.max(24, Math.round(font * 1.5));
   const bottom = 62;
-  const plotWidth = width - left - right;
-  const plotHeight = height - top - bottom;
   const minX = Math.min(...points.map((point) => point.x));
   const maxX = Math.max(...points.map((point) => point.x));
   const minY = Math.min(...points.map((point) => point.y));
   const maxY = Math.max(...points.map((point) => point.y));
   const xRange = maxX - minX || 1;
   const yRange = maxY - minY || 1;
+  const fractions = [0, 0.25, 0.5, 0.75, 1];
+  const xTickLabels = fractions.map((fraction) => formatNumber(minX + xRange * fraction, 0));
+  const yTickLabels = fractions.map((fraction) => formatNumber(minY + yRange * fraction, 0));
+  const left = Math.max(
+    64,
+    16 + Math.max(0, ...yTickLabels.map((value) => textWidth(value, font))),
+  );
+  const plotWidth = width - left - right;
+  const plotHeight = height - top - bottom;
+  const xStride = tickStride(
+    Math.max(0, ...xTickLabels.map((value) => textWidth(value, font))),
+    plotWidth / (fractions.length - 1),
+  );
   const x = (value: number) => left + ((value - minX) / xRange) * plotWidth;
   const y = (value: number) => top + plotHeight - ((value - minY) / yRange) * plotHeight;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg
+      ref={svgRef}
+      style={{ fontSize: font }}
+      viewBox={`0 0 ${width} ${height}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <title>{ariaLabel}</title>
       <desc>
         Dispersión de {xLabel} y {yLabel}, con recta de regresión ajustada.
       </desc>
-      {[0, 0.25, 0.5, 0.75, 1].map((fraction) => {
+      {/* La etiqueta del eje Y va horizontal arriba: rotada, con fuente grande
+          se sale del lienzo. */}
+      <text x={0} y={top - 10} className="lab-axis-label">
+        {yLabel}
+        {yUnit ? ` (${yUnit})` : ""}
+      </text>
+      {fractions.map((fraction, index) => {
         const xValue = minX + xRange * fraction;
         const yValue = minY + yRange * fraction;
+        const showX = index % xStride === 0 || index === fractions.length - 1;
         return (
           <g key={fraction}>
             <line
@@ -375,11 +522,13 @@ export function ScatterChart({
               className="lab-grid-line"
             />
             <text x={left - 8} y={y(yValue) + 3} textAnchor="end" className="lab-axis-label">
-              {formatNumber(yValue, 0)}
+              {yTickLabels[index] ?? ""}
             </text>
-            <text x={x(xValue)} y={height - 38} textAnchor="middle" className="lab-axis-label">
-              {formatNumber(xValue, 0)}
-            </text>
+            {showX ? (
+              <text x={x(xValue)} y={height - 38} textAnchor="middle" className="lab-axis-label">
+                {xTickLabels[index] ?? ""}
+              </text>
+            ) : null}
           </g>
         );
       })}
@@ -389,14 +538,22 @@ export function ScatterChart({
         y1={top + plotHeight}
         y2={top + plotHeight}
         stroke="var(--border-strong)"
+        strokeWidth={hairline(font)}
       />
-      <line x1={left} x2={left} y1={top} y2={top + plotHeight} stroke="var(--border-strong)" />
+      <line
+        x1={left}
+        x2={left}
+        y1={top}
+        y2={top + plotHeight}
+        stroke="var(--border-strong)"
+        strokeWidth={hairline(font)}
+      />
       {points.map((point, index) => (
         <circle
           key={`${point.x}-${point.y}-${index}`}
           cx={x(point.x)}
           cy={y(point.y)}
-          r="3.6"
+          r={Math.max(3.6, font * 0.26)}
           fill="var(--accent)"
           opacity="0.62"
         >
@@ -412,21 +569,12 @@ export function ScatterChart({
         x2={x(regression.xMax)}
         y2={y(regression.intercept + regression.slope * regression.xMax)}
         stroke="var(--accent-2)"
-        strokeWidth="2.4"
+        strokeWidth={Math.max(2.4, font * 0.14)}
         opacity="0.9"
       />
       <text x={left} y={height - 10} className="lab-axis-label">
         {xLabel}
         {xUnit ? ` (${xUnit})` : ""}
-      </text>
-      <text
-        x={16}
-        y={top + plotHeight}
-        transform={`rotate(-90 16 ${top + plotHeight})`}
-        className="lab-axis-label"
-      >
-        {yLabel}
-        {yUnit ? ` (${yUnit})` : ""}
       </text>
     </svg>
   );
@@ -443,42 +591,60 @@ export function ComparisonChart({
   unit: string | null;
   ariaLabel: string;
 }) {
+  const { svgRef, font } = useChartBox();
   const valid = groups.filter((group) => group.mean !== null);
   if (valid.length === 0) return <ChartEmpty />;
   const max = Math.max(1, ...valid.map((group) => group.mean ?? 0));
-  const rowHeight = 40;
-  const height = valid.length * rowHeight + 54;
-  const barX = 190;
-  const barMax = 520;
+  const labelLine = Math.round(font * 1.35);
+  const barHeight = Math.max(24, Math.round(font * 0.95));
+  const rowHeight = labelLine + barHeight + 16;
+  const values = valid.map((group) =>
+    unit ? `${formatNumber(group.mean, 1)} ${unit}` : formatNumber(group.mean, 1),
+  );
+  const valueWidth = Math.max(0, ...values.map((value) => textWidth(value, font)));
+  const barMax = Math.max(80, 800 - valueWidth - 8);
+  const height = 10 + valid.length * rowHeight + 30;
 
   return (
-    <svg viewBox={`0 0 800 ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg
+      ref={svgRef}
+      style={{ fontSize: font }}
+      viewBox={`0 0 800 ${height}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <title>{ariaLabel}</title>
       <desc>Promedio académico medio por {label}.</desc>
       {valid.map((group, index) => {
-        const y = 20 + index * rowHeight;
+        const top = 6 + index * rowHeight;
+        const barY = top + labelLine;
         const width = ((group.mean ?? 0) / max) * barMax;
         return (
           <g key={group.label}>
-            <text x={barX - 8} y={y + 17} textAnchor="end" className="lab-axis-label">
+            <text x={0} y={top + labelLine * 0.82} className="lab-axis-label">
               {group.label}
             </text>
-            <rect x={barX} y={y} width={barMax} height={24} fill="var(--grid)" opacity="0.45" />
+            <rect x={0} y={barY} width={barMax} height={barHeight} fill="var(--grid)" opacity="0.45" />
             <rect
-              x={barX}
-              y={y}
+              x={0}
+              y={barY}
               width={Math.max(2, width)}
-              height={24}
+              height={barHeight}
               fill={CHART_COLORS[index % CHART_COLORS.length]}
               opacity="0.72"
             />
-            <text x={barX + width + 6} y={y + 17} className="lab-axis-label">
-              {formatNumber(group.mean, 1)} {unit ?? ""}
+            <text
+              x={Math.max(2, width) + 6}
+              y={barY + barHeight / 2 + font * 0.35}
+              className="lab-axis-label"
+            >
+              {values[index] ?? ""}
             </text>
           </g>
         );
       })}
-      <text x={barX} y={height - 10} className="lab-axis-label">
+      <text x={0} y={height - 8} className="lab-axis-label">
         {label}
       </text>
     </svg>
@@ -487,20 +653,19 @@ export function ComparisonChart({
 
 export function FiveNumberChart({
   summary,
-  unit,
   ariaLabel,
 }: {
   summary: DescriptiveSummary;
-  unit: string | null;
   ariaLabel: string;
 }) {
+  const { svgRef, font } = useChartBox();
   const { min, max, q1, median, q3 } = summary;
   if (min === null || max === null || q1 === null || median === null || q3 === null) {
     return <ChartEmpty />;
   }
   const width = 760;
-  const height = 120;
   const padding = 54;
+  const boxHeight = Math.max(30, font);
   const baseY = 48;
   const range = max - min;
   const scale = (value: number) =>
@@ -510,10 +675,36 @@ export function FiveNumberChart({
   const medianX = scale(median);
   const q3X = scale(q3);
   const maxX = scale(max);
-  const boxHeight = 30;
+  const labelY = baseY + boxHeight / 2 + font * 1.15;
+  const valueY = labelY + font * 1.3;
+  const height = valueY + font * 0.6 + 10;
+  const ticks = [
+    { x: minX, label: "Mín", value: min },
+    { x: q1X, label: "Q1", value: q1 },
+    { x: medianX, label: "Mediana", value: median },
+    { x: q3X, label: "Q3", value: q3 },
+    { x: maxX, label: "Máx", value: max },
+  ];
+  // Cuando dos cuantiles quedan cerca, la etiqueta de uno tapa a la otra:
+  // se muestra la primera que cabe.
+  let lastRight = -Infinity;
+  const visibleTicks = ticks.filter((tick) => {
+    const half =
+      Math.max(textWidth(tick.label, font), textWidth(formatNumber(tick.value, 1), font)) / 2;
+    if (tick.x - half < lastRight + 6) return false;
+    lastRight = tick.x + half;
+    return true;
+  });
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label={ariaLabel}>
+    <svg
+      ref={svgRef}
+      style={{ fontSize: font }}
+      viewBox={`0 0 ${width} ${height}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label={ariaLabel}
+    >
       <title>{ariaLabel}</title>
       <line x1={padding} x2={width - padding} y1={baseY} y2={baseY} stroke="var(--border-strong)" />
       <line x1={minX} x2={q1X} y1={baseY} y2={baseY} stroke="var(--muted)" />
@@ -537,19 +728,13 @@ export function FiveNumberChart({
         stroke="var(--accent-2)"
         strokeWidth="2.5"
       />
-      {[
-        { x: minX, label: "Mín", value: min },
-        { x: q1X, label: "Q1", value: q1 },
-        { x: medianX, label: "Mediana", value: median },
-        { x: q3X, label: "Q3", value: q3 },
-        { x: maxX, label: "Máx", value: max },
-      ].map((tick) => (
+      {visibleTicks.map((tick) => (
         <g key={tick.label}>
-          <text x={tick.x} y={88} textAnchor="middle" className="lab-axis-label">
+          <text x={tick.x} y={labelY} textAnchor="middle" className="lab-axis-label">
             {tick.label}
           </text>
-          <text x={tick.x} y={104} textAnchor="middle" className="lab-axis-label">
-            {formatNumber(tick.value, 1)} {unit ?? ""}
+          <text x={tick.x} y={valueY} textAnchor="middle" className="lab-axis-label">
+            {formatNumber(tick.value, 1)}
           </text>
         </g>
       ))}

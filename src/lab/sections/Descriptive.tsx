@@ -105,7 +105,6 @@ export function Descriptive() {
                 </div>
                 <FiveNumberChart
                   summary={summary}
-                  unit={variable.unit}
                   ariaLabel={`Tira de cinco números de ${variable.label}: mínimo ${formatNumber(summary.min, 1)}, Q1 ${formatNumber(summary.q1, 1)}, mediana ${formatNumber(summary.median, 1)}, Q3 ${formatNumber(summary.q3, 1)}, máximo ${formatNumber(summary.max, 1)}`}
                 />
                 <p className="mt-1 text-label leading-relaxed text-faint">
